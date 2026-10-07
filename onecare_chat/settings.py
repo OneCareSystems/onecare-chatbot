@@ -38,8 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     "rest_framework",
-    "corsheaders",
-    "accounts",
+    #"corsheaders",
+    #"accounts",
     "knowledgebase",
     "chat",
 ]
@@ -52,16 +52,17 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    "corsheaders.middleware.CorsMiddleware",
+   # "corsheaders.middleware.CorsMiddleware",
 ]
 
-AUTH_USER_MODEL = "accounts.User"
+#AUTH_USER_MODEL = "accounts.User"
 
 REST_FRAMEWORK = {
-    "DEFAULT_AUTHENTICATION_CLASSES": ["rest_framework_simplejwt.authentication.JWTAuthentication"],
-    "DEFAULT_PERMISSION_CLASSES": ["rest_framework.permissions.IsAuthenticated"],
+    "DEFAULT_AUTHENTICATION_CLASSES": [],#["rest_framework_simplejwt.authentication.JWTAuthentication"],
+    "DEFAULT_PERMISSION_CLASSES":[], # ["rest_framework.permissions.IsAuthenticated"],
+    "UNAUTHENTICATED_USER": None,
 }
-CORS_ALLOWED_ORIGINS = ["http://localhost:5173"]
+#CORS_ALLOWED_ORIGINS = ["http://localhost:5173"]
 
 ROOT_URLCONF = 'onecare_chat.urls'
 
