@@ -1,5 +1,12 @@
 name: ci
-on: {push: {branches: [develop]}, pull_request: {dobranches: [develop]}}
+on: {
+    push:{
+      branches: [develop]
+      },
+       pull_request: {
+        branches: [develop]
+        }
+      }
 jobs:
   checks:
     runs-on: ubuntu-latest
