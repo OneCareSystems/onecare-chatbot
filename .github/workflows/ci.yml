@@ -1,40 +1,56 @@
 name: ci
-on: {
-    push:{
-      branches: [develop]
-      },
-       pull_request: {
-        branches: [develop]
-        }
-      }
+
+on:
+  push:
+    branches: [develop,main]
+  pull_request:
+    branches: [develop,main]
+
 jobs:
   checks:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-python@v5
-        with: {python-version: "3.11.9"}
+        with:
+          python-version: "3.11.9"
+
       - run: python scripts/check_pins.py
+
       - run: sudo apt-get update && sudo apt-get install -y default-libmysqlclient-dev pkg-config
+
       - run: pip install -r requirements-dev.txt
+
       - run: ruff check .
+
       - run: pytest -m "not embedding and not slow"
+
       - run: pip-audit -r requirements.txt --no-deps --disable-pip
+
   docker-build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - run: docker build -t onecare-chat .
+
   embedding-smoke:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-python@v5
-        with: {python-version: "3.11.9"}
+        with:
+          python-version: "3.11.9"
+
       - uses: actions/cache@v4
         with:
           path: ~/.cache/huggingface
           key: hf-labse-${{ hashFiles('vectorstore/model_config.py') }}
+
       - run: sudo apt-get update && sudo apt-get install -y default-libmysqlclient-dev pkg-config
+
       - run: pip install -r requirements-dev.txt
+
       - run: pytest -m embedding
