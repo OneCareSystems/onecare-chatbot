@@ -1,0 +1,15 @@
+venv
+.git
+.env
+db.sqlite3
+*.sql
+vector_data/
+media/
+
+# frontend (built separately)
+frontend/node_modules/
+frontend/dist/
+
+# editor files
+.vscode/
+.idea/
