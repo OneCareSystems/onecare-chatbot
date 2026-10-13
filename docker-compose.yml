@@ -2,27 +2,43 @@ services:
   db:
     image: mysql:8.0
     environment:
-      MYSQL_ROOT_PASSWORD: root_dev_pw
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root_dev_pw}
+      MYSQL_DATABASE: ${DB_NAME:-onecare_chatbot}
+      MYSQL_USER: ${DB_USER:-chatbot_app}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-chatbot_dev_pw}
     command: --character-set-server=utf8mb4 --collation-server=utf8mb4_0900_ai_ci
-    ports: ["3306:3306"]
+    ports:
+      - "${MYSQL_HOST_PORT:-3307}:3306"
     volumes:
       - dbdata:/var/lib/mysql
       - ./docker/mysql/init:/docker-entrypoint-initdb.d:ro
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uroot", "-proot_dev_pw"]
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uroot -p$${MYSQL_ROOT_PASSWORD} --silent"]
       interval: 10s
       timeout: 5s
       retries: 10
-  web:
+
+  chatbot:
     build: .
     environment:
-      DB_NAME: onecare_chatbot
-      DB_USER: chatbot_app
-      DB_PASSWORD: chatbot_dev_pw
+      DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY:?Set DJANGO_SECRET_KEY in .env}
+      DB_NAME: ${DB_NAME:-onecare_chatbot}
+      DB_USER: ${DB_USER:-chatbot_app}
+      DB_PASSWORD: ${DB_PASSWORD:-chatbot_dev_pw}
       DB_HOST: db
+      DB_PORT: ${DB_PORT:-3306}
+      ALLOWED_HOSTS: ${ALLOWED_HOSTS:-localhost,127.0.0.1,chatbot}
+      CHATBOT_SERVICE_TOKEN: p_L0whtDrX9J04uaPPNESXFXbvalj8i1SmmqpaeYRgUwGJjYASfVqUAyq-vaEapX
+      CHATBOT_STORAGE_DIR: ${CHATBOT_STORAGE_DIR:-/app/storage}
     command: sh -c "python manage.py migrate && gunicorn onecare_chat.wsgi:application --bind 0.0.0.0:8000"
-    ports: ["8000:8000"]
+    ports:
+      - "8000:8000"
+    volumes:
+      - chatbot_storage:/app/storage
     depends_on:
-      db: {condition: service_healthy}
+      db:
+        condition: service_healthy
+
 volumes:
   dbdata: {}
+  chatbot_storage: {}

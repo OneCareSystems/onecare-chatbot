@@ -54,3 +54,33 @@ jobs:
       - run: pip install -r requirements-dev.txt
 
       - run: pytest -m embedding
+      # ...checkout, setup-python, install as before...
+      - name: Provision schema and restricted user (same script the DBA runs)
+        shell: pwsh
+        run: ./db/create_chatbot_schema.ps1 -WithTestDbGrant
+        env:
+          MYSQL_ADMIN_PASSWORD: ${{ secrets.MYSQL_ADMIN_PASSWORD }}
+          CHATBOT_DB_PASSWORD: swees
+      - name: CI-only stand-in for the main schema
+        env:
+          MYSQL_ADMIN_PASSWORD: ${{ secrets.MYSQL_ADMIN_PASSWORD }}
+        run: >-
+          MYSQL_PWD="$MYSQL_ADMIN_PASSWORD" --protocol=tcp -h127.0.0.1 -uroot < ci/stand_in_spring_schema.sql
+      - run: python manage.py migrate
+      - name: Second migrate must be a no-op
+        run: python manage.py migrate | tee out.txt && grep "No migrations to apply" out.txt
+      - run: python manage.py makemigrations --check --dry-run
+      - run: pytest -m "not embedding" --cov=knowledgebase --cov-report=term-missing
+
+    env:
+      DB_NAME: onecare_chatbot
+      DB_USER: sweeskaran
+      DB_PASSWORD: swees
+      DB_HOST: 127.0.0.1
+      DJANGO_SECRET_KEY: ci-only-secret-key-not-used-anywhere-else
+      CHATBOT_SERVICE_TOKEN: p_L0whtDrX9J04uaPPNESXFXbvalj8i1SmmqpaeYRgUwGJjYASfVqUAyq-vaEapX
+      MYSQL_ADMIN_USER: root
+      MYSQL_ADMIN_PASSWORD: ${{ secrets.MYSQL_ADMIN_PASSWORD }}
+      MAIN_DB_NAME: onecare    # CI stand-in for the main schema
+      SPRING_SCHEMA: onecare
+      SPRING_TABLE: users
