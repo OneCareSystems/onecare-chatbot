@@ -1,8 +1,13 @@
 venv
+scratch
 .git
 .env
 db.sqlite3
 *.sql
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
 vector_data/
 media/
 
