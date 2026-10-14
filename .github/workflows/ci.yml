@@ -35,8 +35,8 @@ jobs:
 
       - run: docker build -t onecare-chat .
 
-  # embedding-smoke:
-  #   runs-on: ubuntu-latest
+  embedding-smoke:
+    runs-on: ubuntu-latest
 
     # NEW: MySQL server for this job (the previous failure was "connection refused"
     # because no database server was running on the runner).
