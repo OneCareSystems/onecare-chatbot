@@ -14,9 +14,8 @@ BAD_STATUSES = ["DELETED", "pending", "Pending", "PENDING ", "", "INDEXED;", "AC
 
 def assert_db_rejects(action):
     """MySQL error 3819 = CHECK constraint violated. Wrapped in atomic() so the test can continue."""
-    with pytest.raises(DatabaseError) as exc:
-        with transaction.atomic():
-            action()
+    with pytest.raises(DatabaseError) as exc, transaction.atomic():
+        action()
     assert "3819" in str(exc.value) or "check constraint" in str(exc.value).lower()
 
 

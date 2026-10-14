@@ -8,7 +8,7 @@ services:
       MYSQL_PASSWORD: ${DB_PASSWORD:-chatbot_dev_pw}
     command: --character-set-server=utf8mb4 --collation-server=utf8mb4_0900_ai_ci
     ports:
-      - "${MYSQL_HOST_PORT:-3306}:3306"
+       - "${MYSQL_HOST_PORT:-3307}:3306"
     volumes:
       - dbdata:/var/lib/mysql
       - ./docker/mysql/init:/docker-entrypoint-initdb.d:ro
@@ -26,7 +26,7 @@ services:
       DB_USER: ${DB_USER:-chatbot_app}
       DB_PASSWORD: ${DB_PASSWORD:-chatbot_dev_pw}
       DB_HOST: db
-      DB_PORT: ${DB_PORT:-3306}
+      DB_PORT: "3306"
       ALLOWED_HOSTS: ${ALLOWED_HOSTS:-localhost,127.0.0.1,chatbot}
       CHATBOT_SERVICE_TOKEN: p_L0whtDrX9J04uaPPNESXFXbvalj8i1SmmqpaeYRgUwGJjYASfVqUAyq-vaEapX
       CHATBOT_STORAGE_DIR: ${CHATBOT_STORAGE_DIR:-/app/storage}
