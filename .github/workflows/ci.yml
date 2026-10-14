@@ -60,7 +60,7 @@ jobs:
       DB_PASSWORD: swees
       DB_HOST: 127.0.0.1
       DJANGO_SECRET_KEY: ci-only-secret-key-not-used-anywhere-else
-      CHATBOT_SERVICE_TOKEN: ci-only-dummy-service-token   # was a real-looking token in plain text
+      CHATBOT_SERVICE_TOKEN: ci-only-dummy-service-token-1234567890
       MYSQL_ADMIN_USER: root
       MYSQL_ADMIN_PASSWORD: ci-root-pass                   # must match MYSQL_ROOT_PASSWORD above
       MAIN_DB_NAME: onecare    # CI stand-in for the main schema
