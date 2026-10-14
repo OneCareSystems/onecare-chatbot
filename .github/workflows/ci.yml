@@ -2,9 +2,9 @@ name: ci
 
 on:
   push:
-    branches: [develop,main]
+    branches: [develop, main]
   pull_request:
-    branches: [develop,main]
+    branches: [develop, main]
 
 jobs:
   checks:
@@ -37,6 +37,36 @@ jobs:
 
   embedding-smoke:
     runs-on: ubuntu-latest
+
+    # NEW: MySQL server for this job (the previous failure was "connection refused"
+    # because no database server was running on the runner).
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: ci-root-pass
+          MYSQL_DATABASE: onecare_chatbot
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1 --silent"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=10
+
+    env:
+      DB_NAME: onecare_chatbot
+      DB_USER: sweeskaran
+      DB_PASSWORD: swees
+      DB_HOST: 127.0.0.1
+      DJANGO_SECRET_KEY: ci-only-secret-key-not-used-anywhere-else
+      CHATBOT_SERVICE_TOKEN: ci-only-dummy-service-token   # was a real-looking token in plain text
+      MYSQL_ADMIN_USER: root
+      MYSQL_ADMIN_PASSWORD: ci-root-pass                   # must match MYSQL_ROOT_PASSWORD above
+      MAIN_DB_NAME: onecare    # CI stand-in for the main schema
+      SPRING_SCHEMA: onecare
+      SPRING_TABLE: users
+
     steps:
       - uses: actions/checkout@v4
 
@@ -49,38 +79,49 @@ jobs:
           path: ~/.cache/huggingface
           key: hf-labse-${{ hashFiles('vectorstore/model_config.py') }}
 
-      - run: sudo apt-get update && sudo apt-get install -y default-libmysqlclient-dev pkg-config
+      # CHANGED: also installs default-mysql-client (provides the `mysql` command)
+      - run: sudo apt-get update && sudo apt-get install -y default-libmysqlclient-dev pkg-config default-mysql-client
 
       - run: pip install -r requirements-dev.txt
 
+      # NEW: wait until MySQL really accepts logins before using it
+      - name: Wait for MySQL
+        env:
+          MYSQL_PWD: ci-root-pass
+        run: |
+          for i in $(seq 1 30); do
+            if mysql --protocol=tcp -h127.0.0.1 -uroot -e "SELECT 1"; then
+              echo "MySQL is up"
+              exit 0
+            fi
+            echo "Waiting for MySQL... ($i/30)"
+            sleep 2
+          done
+          echo "MySQL did not become available in time" >&2
+          docker ps -a
+          docker logs $(docker ps -aq --filter ancestor=mysql:8.0) || true
+          exit 1
+
       - run: pytest -m embedding
-      # ...checkout, setup-python, install as before...
+
       - name: Provision schema and restricted user (same script the DBA runs)
         shell: pwsh
         run: ./db/create_chatbot_schema.ps1 -WithTestDbGrant
         env:
-          MYSQL_ADMIN_PASSWORD: ${{ secrets.MYSQL_ADMIN_PASSWORD }}
+          MYSQL_ADMIN_PASSWORD: ci-root-pass
           CHATBOT_DB_PASSWORD: swees
+
+      # FIXED: the original command was missing the `mysql` program name
       - name: CI-only stand-in for the main schema
         env:
-          MYSQL_ADMIN_PASSWORD: ${{ secrets.MYSQL_ADMIN_PASSWORD }}
-        run: >-
-          MYSQL_PWD="$MYSQL_ADMIN_PASSWORD" --protocol=tcp -h127.0.0.1 -uroot < ci/stand_in_spring_schema.sql
+          MYSQL_PWD: ci-root-pass
+        run: mysql --protocol=tcp -h127.0.0.1 -uroot < ci/stand_in_spring_schema.sql
+
       - run: python manage.py migrate
+
       - name: Second migrate must be a no-op
         run: python manage.py migrate | tee out.txt && grep "No migrations to apply" out.txt
-      - run: python manage.py makemigrations --check --dry-run
-      - run: pytest -m "not embedding" --cov=knowledgebase --cov-report=term-missing
 
-    env:
-      DB_NAME: onecare_chatbot
-      DB_USER: sweeskaran
-      DB_PASSWORD: swees
-      DB_HOST: 127.0.0.1
-      DJANGO_SECRET_KEY: ci-only-secret-key-not-used-anywhere-else
-      CHATBOT_SERVICE_TOKEN: p_L0whtDrX9J04uaPPNESXFXbvalj8i1SmmqpaeYRgUwGJjYASfVqUAyq-vaEapX
-      MYSQL_ADMIN_USER: root
-      MYSQL_ADMIN_PASSWORD: ${{ secrets.MYSQL_ADMIN_PASSWORD }}
-      MAIN_DB_NAME: onecare    # CI stand-in for the main schema
-      SPRING_SCHEMA: onecare
-      SPRING_TABLE: users
+      - run: python manage.py makemigrations --check --dry-run
+
+      - run: pytest -m "not embedding" --cov=knowledgebase --cov-report=term-missing
