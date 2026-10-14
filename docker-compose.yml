@@ -8,7 +8,7 @@ services:
       MYSQL_PASSWORD: ${DB_PASSWORD:-chatbot_dev_pw}
     command: --character-set-server=utf8mb4 --collation-server=utf8mb4_0900_ai_ci
     ports:
-      - "${MYSQL_HOST_PORT:-3307}:3306"
+      - "${MYSQL_HOST_PORT:-3306}:3306"
     volumes:
       - dbdata:/var/lib/mysql
       - ./docker/mysql/init:/docker-entrypoint-initdb.d:ro
