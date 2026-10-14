@@ -45,16 +45,7 @@ INSTALLED_APPS = [
     "chat",
 ]
 
-MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
-   # "corsheaders.middleware.CorsMiddleware",
-]
+MIDDLEWARE = []
 
 #AUTH_USER_MODEL = "accounts.User"
 
@@ -88,18 +79,8 @@ WSGI_APPLICATION = 'onecare_chat.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        # 'ENGINE': 'django.db.backends.sqlite3',
-        # 'NAME': BASE_DIR / 'db.sqlite3',
-        "ENGINE": "django.db.backends.mysql",
-        "NAME": os.getenv("DB_NAME"),
-        "USER": os.getenv("DB_USER"),
-        "PASSWORD": os.getenv("DB_PASSWORD"),
-        "HOST": os.getenv("DB_HOST", "localhost"),
-        "PORT": os.getenv("DB_PORT", "3306"),
-    }
-}
+DATABASES = build_database_config(os.environ)      # chatbot DB only, from env
+DATABASE_ROUTERS = []
 
 
 # Password validation
@@ -143,8 +124,11 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# Add at the bottom (needed for voice files later)
-import os
-
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+
+CHATBOT_STORAGE_DIR = Path(os.environ.get("CHATBOT_STORAGE_DIR") or BASE_DIR / "storage").resolve()
+
+CHATBOT_SERVICE_TOKEN = os.environ.get("CHATBOT_SERVICE_TOKEN", "")
+if len(CHATBOT_SERVICE_TOKEN) < 32:
+    raise ImproperlyConfigured("CHATBOT_SERVICE_TOKEN must be at least 32 characters.")
