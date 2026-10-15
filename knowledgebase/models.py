@@ -1,4 +1,3 @@
-from django.core.validators import RegexValidator
 from django.db import models
 
 from .constants import CASE_SENSITIVE_COLLATION, DocumentStatus, Language, SourceType

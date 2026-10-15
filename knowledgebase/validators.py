@@ -1,35 +1,45 @@
+import hashlib
+import os
 import re
 
-from django.core.exceptions import ValidationError
-
-from .constants import DocumentStatus
+from .errors import ValidationFailed
 
 _EXTERNAL_ID = re.compile(r"^[A-Za-z0-9_.:-]{1,64}$")
 
 
 def clean_external_user_id(value):
+    """Reference to the authenticated OneCare user (the Spring Boot user ID). Nothing else is stored."""
     if value is None or str(value).strip() == "":
         return None
     value = str(value).strip()
-    if not _EXTERNAL_ID.fullmatch(value):
+    if not _EXTERNAL_ID.match(value):
         raise ValueError("Invalid external user id")
     return value
 
 
-def validate_status(value):
-    if value not in DocumentStatus.values:
-        raise ValidationError(
-            "Invalid status %(value)r. Allowed: %(allowed)s.",
-            code="invalid_status",
-            params={"value": value, "allowed": ", ".join(DocumentStatus.values)},
-        )
+def safe_filename(name):
+    base = os.path.basename((name or "").replace("\\", "/"))
+    base = re.sub(r"[^\w.\- ]", "_", base).strip() or "document.pdf"
+    return base[:255]
 
 
-def validate_status_transition(current, new):
-    validate_status(new)
-    if current == DocumentStatus.REMOVED and new != DocumentStatus.REMOVED:
-        raise ValidationError(
-            "A REMOVED document cannot change to %(new)s.",
-            code="invalid_transition",
-            params={"new": new},
-        )
+def validate_pdf_upload(uploaded_file, max_bytes):
+    """Type is decided by CONTENT (the %PDF- header), not by the file extension."""
+    if uploaded_file is None:
+        raise ValidationFailed("A PDF file is required (form field 'file').")
+    if uploaded_file.size == 0:
+        raise ValidationFailed("The uploaded file is empty.")
+    if uploaded_file.size > max_bytes:
+        raise ValidationFailed(f"The file exceeds the maximum size of {max_bytes} bytes.")
+    head = uploaded_file.read(8)
+    uploaded_file.seek(0)
+    if not head.startswith(b"%PDF-"):
+        raise ValidationFailed("The uploaded file is not a valid PDF.")
+
+
+def sha256_of(uploaded_file):
+    digest = hashlib.sha256()
+    for chunk in uploaded_file.chunks():
+        digest.update(chunk)
+    uploaded_file.seek(0)
+    return digest.hexdigest()
