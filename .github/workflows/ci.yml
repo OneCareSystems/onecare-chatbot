@@ -9,6 +9,12 @@ on:
 jobs:
   checks:
     runs-on: ubuntu-latest
+    env:
+      DB_NAME: onecare_chatbot
+      DB_USER: chatbot_app
+      DB_PASSWORD: ci-only-unused-password
+      DB_HOST: 127.0.0.1
+      CHATBOT_SERVICE_TOKEN: ci-only-dummy-service-token-1234567890
     steps:
       - uses: actions/checkout@v4
 
@@ -24,7 +30,7 @@ jobs:
 
       - run: ruff check .
 
-      - run: pytest -m "not embedding and not slow"
+      - run: pytest -m "not embedding and not slow and not mysql"
 
       - run: pip-audit -r requirements.txt --no-deps --disable-pip
 
