@@ -7,6 +7,8 @@ from django.db import IntegrityError
 
 from . import url_safety
 from .errors import Conflict
+from . import vector_index
+from .models import KnowledgeChunk
 
 from . import audit, storage, validators
 from .errors import ValidationFailed
@@ -66,6 +68,14 @@ def submit_link(*, url, actor):
     except IntegrityError as exc:                                  # two simultaneous submissions
         raise Conflict("This link is already in the knowledge base.") from exc
     return doc
+
+def purge_artifacts(doc_id):
+    """Idempotent cleanup: chunks, vectors, raw file, then rebuild the index."""
+    with vector_index.index_lock():
+        KnowledgeChunk.objects.filter(document_id=doc_id).delete()
+        vector_index.delete_vectors(doc_id)
+        vector_index.build_index()
+    storage.delete_raw(doc_id)
 
 # from dataclasses import dataclass
 
