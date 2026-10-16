@@ -3,6 +3,7 @@ import logging
 from functools import wraps
 
 from django.http import HttpResponse, JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 
 from onecare_chat.service_auth import require_service_token
@@ -36,6 +37,7 @@ def _actor(request):
     return request.onecare_user_id
 
 
+@csrf_exempt
 @require_service_token
 @require_http_methods(["POST"])
 @json_errors
@@ -45,6 +47,7 @@ def upload(request):
     return JsonResponse(document_to_dict(doc), status=201)
 
 
+@csrf_exempt
 @require_service_token
 @require_http_methods(["POST"])
 @json_errors
@@ -60,6 +63,7 @@ def submit_link(request):
     return JsonResponse(document_to_dict(doc), status=202)
 
 
+@csrf_exempt
 @require_service_token
 @require_http_methods(["GET", "DELETE"])
 @json_errors

@@ -1,7 +1,6 @@
 import pytest
 
 from knowledgebase import url_safety
-from knowledgebase.errors import ValidationFailed
 from knowledgebase.models import KnowledgeDocument as Doc
 
 from .helpers import auth

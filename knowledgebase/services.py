@@ -1,26 +1,31 @@
-import logging
 import hashlib
-
-from django.conf import settings
-from django.db import transaction
-from django.db import IntegrityError
-
-from . import url_safety
-from .errors import Conflict
-from . import vector_index
-from .models import KnowledgeChunk
-
-from django.utils import timezone
-from .errors import NotFound
-
-from . import audit, storage, validators
-from .errors import ValidationFailed
-from .models import KnowledgeAuditEvent as Audit
-from .models import KnowledgeDocument as Doc
-from .validators import clean_external_user_id
+import logging
+from dataclasses import dataclass
 from urllib.parse import urlsplit
 
+from django.conf import settings
+from django.db import IntegrityError, transaction
+from django.utils import timezone
+
+from . import audit, storage, url_safety, validators, vector_index
+from .errors import Conflict, NotFound, ValidationFailed
+from .models import KnowledgeAuditEvent as Audit
+from .models import KnowledgeChunk
+from .models import KnowledgeDocument as Doc
+from .validators import clean_external_user_id
+
 logger = logging.getLogger(__name__)
+
+
+@dataclass(frozen=True)
+class VectorRebuildResult:
+    documents_seen: int
+
+
+def rebuild_vector_index(repository, rebuilder):
+    document_ids = [document.pk for document in repository.list_indexable()]
+    rebuilder.rebuild(document_ids)
+    return VectorRebuildResult(documents_seen=len(document_ids))
 
 
 def _require_actor(actor):
@@ -100,22 +105,3 @@ def remove_document(doc_id, *, actor):
         # The document is already unreachable (status REMOVED). The worker retries the cleanup.
         logger.exception("Cleanup after removing document %s failed; it will be retried", doc.id)
     return doc
-
-# from dataclasses import dataclass
-
-# from .repositories import KnowledgeDocumentRepository
-# from .vector_index import VectorIndexRebuilder
-
-
-# @dataclass(frozen=True)
-# class VectorRebuildResult:
-#     documents_seen: int
-
-
-# def rebuild_vector_index(
-#     repository: KnowledgeDocumentRepository,
-#     rebuilder: VectorIndexRebuilder,
-# ) -> VectorRebuildResult:
-#     document_ids = [document.pk for document in repository.list_indexable()]
-#     rebuilder.rebuild(document_ids)
-#     return VectorRebuildResult(documents_seen=len(document_ids))

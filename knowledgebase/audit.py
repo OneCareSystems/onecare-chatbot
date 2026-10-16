@@ -9,7 +9,7 @@ from .models import KnowledgeAuditEvent
 logger = logging.getLogger(__name__)
 
 RESOURCE = "KNOWLEDGE_DOCUMENT"
-_SECRET_KEY = re.compile(r"token|secret|password|passwd|authorization|api[_-]?key|credential|cookie|content", re.I)
+_SECRET_KEY = re.compile(r"token|secret|password|passwd|authorization|api[_-]?key|credential|cookie|content", re.IGNORECASE)
 _MAX_VALUE = 200
 
 

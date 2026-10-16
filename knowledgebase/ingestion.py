@@ -1,6 +1,5 @@
 import hashlib
 import logging
-from urllib.parse import urlsplit
 
 from django.conf import settings
 from django.db import transaction

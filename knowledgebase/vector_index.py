@@ -2,8 +2,9 @@ import json
 import logging
 import os
 import shutil
+from abc import ABC, abstractmethod
 from contextlib import contextmanager
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 
 import numpy as np
@@ -24,6 +25,20 @@ class IndexBusy(RuntimeError):
 
 class IndexInconsistent(RuntimeError):
     pass
+
+
+class VectorIndexRebuilder(ABC):
+    @abstractmethod
+    def rebuild(self, document_ids):
+        raise NotImplementedError
+
+
+class StubVectorIndexRebuilder(VectorIndexRebuilder):
+    def __init__(self):
+        self.calls = []
+
+    def rebuild(self, document_ids):
+        self.calls.append(list(document_ids))
 
 
 def _root():
@@ -129,7 +144,7 @@ def build_index(include=()):
         faiss.write_index(index, str(directory / (index_file + ".tmp")))
         os.replace(directory / (index_file + ".tmp"), directory / index_file)
     manifest = {"version": number, "index_file": index_file, "chunk_ids": chunk_ids,
-                "built_at": datetime.now(timezone.utc).isoformat()}
+                "built_at": datetime.now(UTC).isoformat()}
     tmp = directory / (MANIFEST + ".tmp")
     tmp.write_text(json.dumps(manifest))
     os.replace(tmp, directory / MANIFEST)                   # <- the atomic switch

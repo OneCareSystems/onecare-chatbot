@@ -3,7 +3,8 @@ import pytest
 from knowledgebase import ingestion
 from knowledgebase.chunking import chunk_text
 from knowledgebase.language import detect_language
-from knowledgebase.models import KnowledgeChunk, KnowledgeDocument as Doc
+from knowledgebase.models import KnowledgeChunk
+from knowledgebase.models import KnowledgeDocument as Doc
 
 from .helpers import LONG_EN, new_pdf_doc
 from .pdfs import english_pdf, scanned_pdf, tamil_pdf

@@ -2,6 +2,8 @@ from django.db import models
 
 
 class KnowledgeDocument(models.Model):
+    CASE_SENSITIVE = "utf8mb4_0900_as_cs"
+
     class SourceType(models.TextChoices):
         PDF = "PDF"
         WEB = "WEB"
@@ -19,9 +21,11 @@ class KnowledgeDocument(models.Model):
         UNKNOWN = "UNKNOWN"
 
     title = models.CharField(max_length=255)
-    source_type = models.CharField(max_length=16, choices=SourceType.choices)
-    status = models.CharField(max_length=16, choices=Status.choices, default=Status.PENDING)
-    language = models.CharField(max_length=8, choices=Language.choices, blank=True, default="")
+    source_type = models.CharField(max_length=16, choices=SourceType.choices, db_collation=CASE_SENSITIVE)
+    status = models.CharField(max_length=16, choices=Status.choices, default=Status.PENDING,
+                              db_collation=CASE_SENSITIVE)
+    language = models.CharField(max_length=8, choices=Language.choices, blank=True, default="",
+                                db_collation=CASE_SENSITIVE)
     storage_path = models.CharField(max_length=500, blank=True, default="")
     content_sha256 = models.CharField(max_length=64, blank=True, default="")
     failure_reason = models.CharField(max_length=500, blank=True, default="")

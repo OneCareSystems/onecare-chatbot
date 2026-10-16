@@ -1,7 +1,8 @@
 import pytest
 
 from knowledgebase import ingestion, retrieval, services, vector_index
-from knowledgebase.models import KnowledgeChunk, KnowledgeDocument as Doc
+from knowledgebase.models import KnowledgeChunk
+from knowledgebase.models import KnowledgeDocument as Doc
 from tests.fakes import FakeEmbedder
 
 from .helpers import LONG_EN, auth, new_pdf_doc

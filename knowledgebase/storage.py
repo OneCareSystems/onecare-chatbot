@@ -19,8 +19,7 @@ def save_raw_pdf(doc_id, uploaded_file) -> str:
     directory.mkdir(parents=True, exist_ok=True)
     path = directory / f"{uuid.uuid4().hex}.pdf"
     with open(path, "wb") as handle:
-        for chunk in uploaded_file.chunks():
-            handle.write(chunk)
+        handle.writelines(uploaded_file.chunks())
     return str(path.relative_to(root()))
 
 

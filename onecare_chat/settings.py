@@ -124,14 +124,14 @@ if len(CHATBOT_SERVICE_TOKEN) < 32:
 
 # ---- Knowledge base (KB-01 .. KB-09) ----
 APPEND_SLASH = False
-KB_MAX_UPLOAD_BYTES = int(os.environ.get("KB_MAX_UPLOAD_BYTES", 10 * 1024 * 1024))   # keep equal to Spring's max-file-size
+KB_MAX_UPLOAD_BYTES = int(os.environ.get("KB_MAX_UPLOAD_BYTES", "10485760"))   # keep equal to Spring's max-file-size
 KB_URL_ALLOWLIST = [d.strip().lower() for d in os.environ.get("KB_URL_ALLOWLIST", "").split(",") if d.strip()]
-KB_FETCH_MAX_BYTES = int(os.environ.get("KB_FETCH_MAX_BYTES", 5 * 1024 * 1024))
-KB_MIN_TEXT_CHARS = int(os.environ.get("KB_MIN_TEXT_CHARS", 50))
-KB_LANG_DOMINANCE = float(os.environ.get("KB_LANG_DOMINANCE", 0.9))
-KB_CHUNK_MAX_TOKENS = int(os.environ.get("KB_CHUNK_MAX_TOKENS", 450))
-KB_CHUNK_MIN_TOKENS = int(os.environ.get("KB_CHUNK_MIN_TOKENS", 300))
-KB_CHUNK_OVERLAP_TOKENS = int(os.environ.get("KB_CHUNK_OVERLAP_TOKENS", 50))
-KB_EMBED_BATCH = int(os.environ.get("KB_EMBED_BATCH", 32))
+KB_FETCH_MAX_BYTES = int(os.environ.get("KB_FETCH_MAX_BYTES", "5242880"))
+KB_MIN_TEXT_CHARS = int(os.environ.get("KB_MIN_TEXT_CHARS", "50"))
+KB_LANG_DOMINANCE = float(os.environ.get("KB_LANG_DOMINANCE", "0.9"))
+KB_CHUNK_MAX_TOKENS = int(os.environ.get("KB_CHUNK_MAX_TOKENS", "450"))
+KB_CHUNK_MIN_TOKENS = int(os.environ.get("KB_CHUNK_MIN_TOKENS", "300"))
+KB_CHUNK_OVERLAP_TOKENS = int(os.environ.get("KB_CHUNK_OVERLAP_TOKENS", "50"))
+KB_EMBED_BATCH = int(os.environ.get("KB_EMBED_BATCH", "32"))
 KB_EMBEDDER_CLASS = os.environ.get("KB_EMBEDDER_CLASS", "knowledgebase.embedding.SentenceTransformerEmbedder")
 EMBEDDING_MODEL = os.environ.get("EMBEDDING_MODEL", "intfloat/multilingual-e5-small")

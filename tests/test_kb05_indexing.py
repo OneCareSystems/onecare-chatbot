@@ -1,7 +1,8 @@
 import pytest
 
 from knowledgebase import ingestion, retrieval, vector_index
-from knowledgebase.models import KnowledgeChunk, KnowledgeDocument as Doc
+from knowledgebase.models import KnowledgeChunk
+from knowledgebase.models import KnowledgeDocument as Doc
 
 from .helpers import LONG_EN, new_pdf_doc
 
