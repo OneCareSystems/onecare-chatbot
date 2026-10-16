@@ -15,6 +15,10 @@ asgiref==3.12.1
     # via
     #   -c requirements.txt
     #   django
+babel==2.18.0
+    # via
+    #   -c requirements.txt
+    #   courlan
 boolean-py==5.0
     # via license-expression
 build==1.6.1
@@ -28,14 +32,22 @@ certifi==2026.7.22
     #   httpcore
     #   httpx
     #   requests
+    #   trafilatura
 cffi==2.1.1 ; platform_python_implementation != 'PyPy'
     # via
     #   -c requirements.txt
     #   cryptography
+chardet==7.6.0
+    # via
+    #   -c requirements.txt
+    #   readability-lxml
+    #   trafilatura
 charset-normalizer==3.5.2
     # via
     #   -c requirements.txt
+    #   htmldate
     #   pdfminer-six
+    #   reportlab
     #   requests
 click==8.5.0
     # via
@@ -53,14 +65,26 @@ colorama==0.4.6 ; os_name == 'nt' or sys_platform == 'win32'
     #   pytest
     #   tqdm
     #   typer
+courlan==1.4.0
+    # via
+    #   -c requirements.txt
+    #   trafilatura
 coverage==7.16.2
     # via pytest-cov
 cryptography==50.0.2
     # via
     #   -c requirements.txt
     #   pdfminer-six
+cssselect==1.6.0
+    # via
+    #   -c requirements.txt
+    #   readability-lxml
 cyclonedx-python-lib==11.12.0
     # via pip-audit
+dateparser==1.4.3
+    # via
+    #   -c requirements.txt
+    #   htmldate
 defusedxml==0.7.1
     # via py-serializable
 django==5.2.18
@@ -99,6 +123,10 @@ hf-xet==1.7.0 ; platform_machine == 'AMD64' or platform_machine == 'aarch64' or 
     # via
     #   -c requirements.txt
     #   huggingface-hub
+htmldate==1.10.0
+    # via
+    #   -c requirements.txt
+    #   trafilatura
 httpcore==1.0.9
     # via
     #   -c requirements.txt
@@ -130,12 +158,28 @@ joblib==1.6.0
     # via
     #   -c requirements.txt
     #   scikit-learn
+justext==3.0.2
+    # via
+    #   -c requirements.txt
+    #   trafilatura
 langdetect==1.0.9
     # via
     #   -c requirements.txt
     #   -r requirements.in
 license-expression==30.4.4
     # via cyclonedx-python-lib
+lxml==6.1.3
+    # via
+    #   -c requirements.txt
+    #   htmldate
+    #   justext
+    #   lxml-html-clean
+    #   readability-lxml
+    #   trafilatura
+lxml-html-clean==0.4.5
+    # via
+    #   -c requirements.txt
+    #   lxml
 markdown-it-py==4.2.0
     # via
     #   -c requirements.txt
@@ -169,6 +213,7 @@ networkx==3.6.1
 numpy==2.4.6
     # via
     #   -c requirements.txt
+    #   -r requirements.in
     #   faiss-cpu
     #   scikit-learn
     #   scipy
@@ -199,6 +244,7 @@ pillow==12.3.0
     # via
     #   -c requirements.txt
     #   pdfplumber
+    #   reportlab
 pip==26.2.1
     # via
     #   pip-api
@@ -223,10 +269,6 @@ pycparser==3.11 ; implementation_name != 'PyPy' and platform_python_implementati
     # via
     #   -c requirements.txt
     #   cffi
-python-dotenv==1.1.1
-    # via
-    #   -c requirements.txt
-    #   -r requirements.in
 pygments==2.21.0
     # via
     #   -c requirements.txt
@@ -251,17 +293,39 @@ pytest-cov==7.1.0
     # via -r requirements-dev.in
 pytest-django==4.14.0
     # via -r requirements-dev.in
+python-dateutil==2.9.0.post0
+    # via
+    #   -c requirements.txt
+    #   dateparser
+    #   htmldate
+python-dotenv==1.1.1
+    # via
+    #   -c requirements.txt
+    #   -r requirements.in
+pytz==2026.5
+    # via
+    #   -c requirements.txt
+    #   dateparser
 pyyaml==6.0.3
     # via
     #   -c requirements.txt
     #   huggingface-hub
     #   transformers
+readability-lxml==0.8.4.1
+    # via
+    #   -c requirements.txt
+    #   trafilatura
 regex==2026.9.29
     # via
     #   -c requirements.txt
+    #   dateparser
     #   transformers
-requests==2.34.2
+reportlab==5.0.1
+    # via -r requirements-dev.in
+requests==2.31.0
     # via
+    #   -c requirements.txt
+    #   -r requirements.in
     #   cachecontrol
     #   pip-audit
 rich==15.0.0
@@ -296,6 +360,7 @@ six==1.17.0
     # via
     #   -c requirements.txt
     #   langdetect
+    #   python-dateutil
 sortedcontainers==2.4.0
     # via cyclonedx-python-lib
 sqlparse==0.6.0
@@ -310,6 +375,10 @@ threadpoolctl==3.7.0
     # via
     #   -c requirements.txt
     #   scikit-learn
+tld==0.13.2
+    # via
+    #   -c requirements.txt
+    #   courlan
 tokenizers==0.23.3
     # via
     #   -c requirements.txt
@@ -331,6 +400,10 @@ tqdm==4.70.1
     #   huggingface-hub
     #   sentence-transformers
     #   transformers
+trafilatura==0.9.2
+    # via
+    #   -c requirements.txt
+    #   -r requirements.in
 transformers==5.16.1
     # via
     #   -c requirements.txt
@@ -352,8 +425,18 @@ tzdata==2026.5 ; sys_platform == 'win32'
     # via
     #   -c requirements.txt
     #   django
-urllib3==2.8.0
-    # via requests
+    #   tzlocal
+tzlocal==5.4.4
+    # via
+    #   -c requirements.txt
+    #   dateparser
+urllib3==1.26.20
+    # via
+    #   -c requirements.txt
+    #   courlan
+    #   htmldate
+    #   requests
+    #   trafilatura
 wheel==0.48.0
     # via pip-tools
 
