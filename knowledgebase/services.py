@@ -10,6 +10,9 @@ from .errors import Conflict
 from . import vector_index
 from .models import KnowledgeChunk
 
+from django.utils import timezone
+from .errors import NotFound
+
 from . import audit, storage, validators
 from .errors import ValidationFailed
 from .models import KnowledgeAuditEvent as Audit
@@ -76,6 +79,27 @@ def purge_artifacts(doc_id):
         vector_index.delete_vectors(doc_id)
         vector_index.build_index()
     storage.delete_raw(doc_id)
+    
+def remove_document(doc_id, *, actor):
+    """Mark REMOVED first (queries stop using it at once), then purge vectors, chunks and the raw file.
+    Idempotent: removing a REMOVED document returns normally and retries any leftover cleanup."""
+    actor = _require_actor(actor)
+    with transaction.atomic():                                        # status change + audit succeed or fail together
+        try:
+            doc = Doc.objects.select_for_update().get(pk=doc_id)
+        except Doc.DoesNotExist:
+            raise NotFound("Knowledge document not found.") from None
+        if doc.status != Doc.Status.REMOVED:
+            doc.status, doc.removed_at, doc.url_hash = Doc.Status.REMOVED, timezone.now(), None   # url_hash freed: link can be re-added
+            doc.save(update_fields=["status", "removed_at", "url_hash", "updated_at"])
+            audit.record(action=Audit.Action.DOCUMENT_REMOVED, resource_id=doc.id, actor=actor,
+                         document=doc, details={"source_type": doc.source_type})
+    try:
+        purge_artifacts(doc.id)
+    except Exception:
+        # The document is already unreachable (status REMOVED). The worker retries the cleanup.
+        logger.exception("Cleanup after removing document %s failed; it will be retried", doc.id)
+    return doc
 
 # from dataclasses import dataclass
 
