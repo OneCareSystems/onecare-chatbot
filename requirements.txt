@@ -104,6 +104,8 @@ pillow==12.3.0
     # via pdfplumber
 pycparser==3.11
     # via cffi
+python-dotenv==1.1.1
+    # via -r requirements.in
 pygments==2.21.0
     # via rich
 pypdfium2==5.14.0
