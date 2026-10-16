@@ -83,6 +83,7 @@ Dev only (`requirements-dev.in`):
 |---|---|---|
 | pytest | 9.1.1 | Test runner |
 | pytest-django | 4.14.0 | Django integration for pytest |
+| reportlab | 5.0.1 | Generate PDFs for tests |
 | ruff | `<version>` | Linting |
 | pip-audit | 2.10.1 | Vulnerability scanning (AC4) |
 | pip-tools | 7.4.1 | `pip-compile` to generate the lock files |
