@@ -32,7 +32,8 @@ jobs:
 
       - run: pytest -m "not embedding and not slow and not mysql"
 
-      - run: pip-audit -r requirements.txt --no-deps --disable-pip
+      # OSV can audit the CPU-only torch build suffix that PyPI does not publish.
+      - run: pip-audit -r requirements.txt --no-deps --disable-pip --vulnerability-service osv
 
   docker-build:
     runs-on: ubuntu-latest
