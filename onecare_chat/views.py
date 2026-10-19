@@ -1,5 +1,5 @@
 # views.py
-from django.http import JsonResponse
+from django.http import JsonResponse  # type: ignore[reportMissingModuleSource]
 
 from .service_auth import require_service_token
 
