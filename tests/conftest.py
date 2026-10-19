@@ -23,3 +23,19 @@ def kb_env(settings, tmp_path):
     _reset_caches()
     yield
     _reset_caches()
+    
+@pytest.fixture(autouse=True)
+def chat_env(settings):
+    from chat_pipeline import patterns, search
+    settings.CHAT_PATTERNS_FILE = patterns.DEFAULT_FILE
+    settings.CHAT_SCORE_THRESHOLDS = {"EN": 0.80, "TA": 0.75, "DEFAULT": 0.80}
+    settings.CHAT_SEARCH_K, settings.CHAT_SEARCH_MAX_K, settings.CHAT_SEARCH_TIMEOUT_SECONDS = 5, 10, 1
+    settings.CHAT_MAX_QUERY_CHARS = 500
+    settings.CHAT_TAMIL_SHARE_THRESHOLD = 0.5
+    settings.CHAT_GENERATOR_CLASS = "chat_pipeline.generation.ExtractiveGenerator"
+    settings.SPRING_BASE_URL, settings.SPRING_SERVICE_TOKEN = "http://spring.test", "spring-service-token"
+    settings.SPRING_CONNECT_TIMEOUT, settings.SPRING_READ_TIMEOUT = 1, 1
+    patterns.reset_cache()
+    search.reset_latencies()
+    yield
+    patterns.reset_cache()
