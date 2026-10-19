@@ -30,6 +30,7 @@ services:
       ALLOWED_HOSTS: ${ALLOWED_HOSTS:-localhost,127.0.0.1,chatbot}
       CHATBOT_SERVICE_TOKEN: ${CHATBOT_SERVICE_TOKEN:?Set CHATBOT_SERVICE_TOKEN in .env}
       CHATBOT_STORAGE_DIR: ${CHATBOT_STORAGE_DIR:-/app/storage}
+      KB_URL_ALLOWLIST: ${KB_URL_ALLOWLIST:-}
     command: sh -c "python manage.py migrate && gunicorn onecare_chat.wsgi:application --bind 0.0.0.0:8000"
     ports:
       - "8000:8000"

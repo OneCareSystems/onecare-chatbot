@@ -1,6 +1,5 @@
 import hashlib
-
-import numpy as np
+import math
 
 
 class FakeEmbedder:
@@ -11,14 +10,14 @@ class FakeEmbedder:
         return len(text.split())
 
     def _vec(self, text):
-        v = np.zeros(self.dim, dtype="float32")
+        v = [0.0] * self.dim
         for word in text.lower().split():
             v[int(hashlib.md5(word.encode()).hexdigest(), 16) % self.dim] += 1.0
-        norm = np.linalg.norm(v)
-        return v / norm if norm else v
+        norm = math.sqrt(sum(value * value for value in v))
+        return [value / norm for value in v] if norm else v
 
     def embed_passages(self, texts):
-        return np.stack([self._vec(t) for t in texts]).astype("float32")
+        return [self._vec(text) for text in texts]
 
     def embed_query(self, text):
         return self._vec(text)

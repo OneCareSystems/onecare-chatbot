@@ -1,14 +1,18 @@
-from django.urls import path
+from django.urls import path  # type: ignore[reportMissingModuleSource]
 
+from chat_pipeline import views as chat
 from knowledgebase import views as kb
 
 from .views import health
 
 urlpatterns = [
+    path("internal/health", health),
     path("internal/health/", health),
     path("internal/knowledge-base", kb.upload),
     path("internal/knowledge-base/links", kb.submit_link),
     path("internal/knowledge-base/<int:doc_id>", kb.document_detail),
+    path("internal/chat/query", chat.chat_query),
+    path("internal/chat/query/", chat.chat_query),
 ]
 
 # """
