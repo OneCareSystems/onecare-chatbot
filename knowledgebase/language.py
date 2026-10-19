@@ -1,6 +1,7 @@
-from django.conf import settings
 import logging
 from collections import namedtuple
+
+from django.conf import settings
 
 _query_logger = logging.getLogger(__name__)
 QueryLanguage = namedtuple("QueryLanguage", "language reason")

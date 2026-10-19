@@ -1,6 +1,7 @@
 import logging
 import time
 
+import numpy as np
 import pytest
 
 from chat_pipeline import search
@@ -8,6 +9,25 @@ from chat_pipeline.errors import VectorStoreUnavailable
 from knowledgebase import retrieval
 
 from .chat_helpers import hit
+
+
+def test_retrieval_accepts_list_query_vectors(monkeypatch):
+    class Index:
+        ntotal = 1
+
+        def search(self, query_vectors, _count):
+            assert query_vectors.shape == (1, 64)
+            assert query_vectors.dtype == np.float32
+            return np.array([[0]], dtype=np.float32), np.array([[-1]], dtype=np.int64)
+
+    class Embedder:
+        def embed_query(self, _query):
+            return [0.0] * 64
+
+    monkeypatch.setattr(retrieval.vector_index, "load_active_index", lambda: ({"chunk_ids": []}, Index()))
+    monkeypatch.setattr(retrieval, "get_embedder", lambda: Embedder())
+
+    assert retrieval.search("query") == []
 
 
 def _patch(monkeypatch, fn):

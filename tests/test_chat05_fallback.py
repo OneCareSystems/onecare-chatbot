@@ -1,4 +1,3 @@
-import pytest
 
 from chat_pipeline import confidence, messages, service
 

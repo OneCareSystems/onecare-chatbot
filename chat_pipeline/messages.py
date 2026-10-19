@@ -1,13 +1,13 @@
 """Static, doctor-approved texts live in resources/messages_<lang>.json (NFRPO005), never in code."""
 import json
-from functools import lru_cache
+from functools import cache
 from pathlib import Path
 
 RESOURCE_DIR = Path(__file__).parent / "resources"
 SUPPORTED = ("EN", "TA")
 
 
-@lru_cache(maxsize=None)
+@cache
 def _load(language):
     return json.loads((RESOURCE_DIR / f"messages_{language.lower()}.json").read_text(encoding="utf-8"))
 

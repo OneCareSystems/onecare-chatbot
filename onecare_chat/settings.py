@@ -126,23 +126,23 @@ KB_EMBEDDER_CLASS = os.environ.get("KB_EMBEDDER_CLASS", "knowledgebase.embedding
 EMBEDDING_MODEL = os.environ.get("EMBEDDING_MODEL", "intfloat/multilingual-e5-small")
 
 # ---- Chat pipeline, DDP-#37 Stage 3 (CHAT-01 .. CHAT-07) ----
-CHAT_MAX_QUERY_CHARS = int(os.environ.get("CHAT_MAX_QUERY_CHARS", 500))               # NFRS-007: confirm the real limit
-CHAT_TAMIL_SHARE_THRESHOLD = float(os.environ.get("CHAT_TAMIL_SHARE_THRESHOLD", 0.5))
-CHAT_SEARCH_K = int(os.environ.get("CHAT_SEARCH_K", 5))
-CHAT_SEARCH_MAX_K = int(os.environ.get("CHAT_SEARCH_MAX_K", 10))
-CHAT_SEARCH_TIMEOUT_SECONDS = float(os.environ.get("CHAT_SEARCH_TIMEOUT_SECONDS", 5))
+CHAT_MAX_QUERY_CHARS = int(os.environ.get("CHAT_MAX_QUERY_CHARS", "500"))               # NFRS-007: confirm the real limit
+CHAT_TAMIL_SHARE_THRESHOLD = float(os.environ.get("CHAT_TAMIL_SHARE_THRESHOLD", "0.5"))
+CHAT_SEARCH_K = int(os.environ.get("CHAT_SEARCH_K", "5"))
+CHAT_SEARCH_MAX_K = int(os.environ.get("CHAT_SEARCH_MAX_K", "10"))
+CHAT_SEARCH_TIMEOUT_SECONDS = float(os.environ.get("CHAT_SEARCH_TIMEOUT_SECONDS", "5"))
 # CHAT-05: best score >= threshold counts as a match (inclusive). CALIBRATE on EN and TA fixture sets before release.
 CHAT_SCORE_THRESHOLDS = {
-    "EN": float(os.environ.get("CHAT_SCORE_THRESHOLD_EN", 0.80)),
-    "TA": float(os.environ.get("CHAT_SCORE_THRESHOLD_TA", 0.75)),      # cross-lingual scores are usually lower
-    "DEFAULT": float(os.environ.get("CHAT_SCORE_THRESHOLD_DEFAULT", 0.80)),
+    "EN": float(os.environ.get("CHAT_SCORE_THRESHOLD_EN", "0.80")),
+    "TA": float(os.environ.get("CHAT_SCORE_THRESHOLD_TA", "0.75")),      # cross-lingual scores are usually lower
+    "DEFAULT": float(os.environ.get("CHAT_SCORE_THRESHOLD_DEFAULT", "0.80")),
 }
 CHAT_GENERATOR_CLASS = os.environ.get("CHAT_GENERATOR_CLASS", "chat_pipeline.generation.ExtractiveGenerator")   # CHAT-09 replaces it
 
 # Django -> Spring Boot (CHAT-07). SPRING_SERVICE_TOKEN is the INT-01 service credential. Never a user JWT.
 SPRING_BASE_URL = os.environ.get("SPRING_BASE_URL", "http://127.0.0.1:9090")          # mock server now, real Spring later
 SPRING_SERVICE_TOKEN = os.environ.get("SPRING_SERVICE_TOKEN", "")
-SPRING_CONNECT_TIMEOUT = float(os.environ.get("SPRING_CONNECT_TIMEOUT", 2))
-SPRING_READ_TIMEOUT = float(os.environ.get("SPRING_READ_TIMEOUT", 3))
+SPRING_CONNECT_TIMEOUT = float(os.environ.get("SPRING_CONNECT_TIMEOUT", "2"))
+SPRING_READ_TIMEOUT = float(os.environ.get("SPRING_READ_TIMEOUT", "3"))
 SPRING_CLINIC_HOURS_PATH = os.environ.get("SPRING_CLINIC_HOURS_PATH", "/api/internal/clinic/hours")
 SPRING_CLINIC_AVAILABILITY_PATH = os.environ.get("SPRING_CLINIC_AVAILABILITY_PATH", "/api/internal/clinic/availability")

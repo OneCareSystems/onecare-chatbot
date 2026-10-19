@@ -26,7 +26,7 @@ def evaluate(query):
     """FAIL CLOSED: if the classifier errors, the request is refused, the error is logged (no query text)."""
     try:
         decision = check_query(query)
-    except Exception as exc:
+    except Exception as exc:  # noqa: BLE001
         logger.error("Guardrail classifier error (%s): request refused (fail-closed)", exc.__class__.__name__)
         return GuardrailDecision(True, "GUARDRAIL_ERROR", None)
     if decision.blocked:

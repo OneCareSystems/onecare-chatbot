@@ -2,7 +2,7 @@
 import logging
 import string
 from dataclasses import dataclass
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 from .patterns import first_match, load_patterns, normalize
 
@@ -51,10 +51,10 @@ def filter_output(text, language, system_prompt=None):
     """FAIL CLOSED: if the filter itself errors the output is blocked. The log has rule, language and time only."""
     try:
         rule = _check(text, system_prompt)
-    except Exception as exc:
+    except Exception as exc:  # noqa: BLE001
         logger.error("Post-generation filter error (%s): output blocked (fail-closed)", exc.__class__.__name__)
         rule = "FILTER_ERROR"
     if rule:
-        logger.warning("Output blocked rule=%s language=%s at=%s", rule, language, datetime.now(timezone.utc).isoformat())
+        logger.warning("Output blocked rule=%s language=%s at=%s", rule, language, datetime.now(UTC).isoformat())
         return FilterResult(False, None, rule)
     return FilterResult(True, text)
