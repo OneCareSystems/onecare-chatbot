@@ -14,7 +14,7 @@ from chat_pipeline.models import ChatLog
 
 from .chat_helpers import fake_search, hit
 
-pytestmark = pytest.mark.django_db
+pytestmark = [pytest.mark.mysql, pytest.mark.django_db]
 
 
 @pytest.fixture(autouse=True)
