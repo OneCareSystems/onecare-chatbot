@@ -38,5 +38,5 @@ def record(request_id, query, response, trace, fallback_path, latency_ms):
                 fallback_path=fallback_path, guardrail_category=trace.guardrail_category, best_score=trace.best_score,
                 matched_chunks=trace.hits, llm_model=trace.model, prompt_version=trace.prompt_version,
                 latency_ms=int(latency_ms))
-    except Exception as exc:
+    except Exception as exc:  # noqa: BLE001 - audit failures must never interrupt a response; log only the error type.
         logger.error("Chat log write failed (%s); the response is still returned", exc.__class__.__name__)

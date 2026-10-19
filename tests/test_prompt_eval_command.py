@@ -1,7 +1,7 @@
 from unittest import mock
 
 import pytest
-from django.core.management import call_command, CommandError
+from django.core.management import CommandError, call_command
 
 from chat_pipeline.llm import LLMUnavailable, OpenAICompatibleClient
 
@@ -36,9 +36,11 @@ def test_invalid_interval_is_rejected(interval):
 def test_exhausted_quota_is_not_retried():
     response = mock.Mock(status_code=429)
     response.json.return_value = {"error": {"code": "insufficient_quota"}}
-    with mock.patch("chat_pipeline.llm.requests.post", return_value=response) as post, \
-            mock.patch("chat_pipeline.llm.time.sleep") as sleep:
-        with pytest.raises(LLMUnavailable, match="quota exhausted"):
-            OpenAICompatibleClient().complete("system", "user")
+    with (
+        mock.patch("chat_pipeline.llm.requests.post", return_value=response) as post,
+        mock.patch("chat_pipeline.llm.time.sleep") as sleep,
+        pytest.raises(LLMUnavailable, match="quota exhausted"),
+    ):
+        OpenAICompatibleClient().complete("system", "user")
     post.assert_called_once()
     sleep.assert_not_called()

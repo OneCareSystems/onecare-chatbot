@@ -3,7 +3,7 @@ import json
 from pathlib import Path
 
 import pytest
-from django.core.management import call_command
+from django.core.management import CommandError, call_command
 
 from chat_pipeline import prompts
 
@@ -94,8 +94,6 @@ def test_language_check_can_be_switched_off(settings):
 def test_the_eval_cases_file_is_valid_and_runs_with_the_fake_client(capsys):
     cases = json.loads((Path(prompts.__file__).parent / "config" / "prompt_eval_cases.json").read_text(encoding="utf-8"))
     assert len(cases) >= 8 and all({"name", "language", "context", "question"} <= set(c) for c in cases)
-    try:
+    with pytest.raises(CommandError, match="Prompt evaluation failed"):
         call_command("chat_prompt_eval", "--fake")
-    except Exception:
-        pass                                   # the fake model is not expected to pass every real-model case
     assert "PASS in_context_english" in capsys.readouterr().out

@@ -1,3 +1,5 @@
+from typing import ClassVar
+
 from django.db import models
 from django.utils import timezone
 
@@ -22,8 +24,8 @@ class ChatLog(models.Model):
     latency_ms = models.IntegerField(default=0)
 
     class Meta:
-        ordering = ["-created_at"]
-        indexes = [models.Index(fields=["response_type", "created_at"])]
+        ordering: ClassVar[list[str]] = ["-created_at"]
+        indexes: ClassVar[list[models.Index]] = [models.Index(fields=["response_type", "created_at"])]
 
     def __str__(self):
         return f"{self.request_id} {self.response_type} {self.fallback_path or '-'}"

@@ -6,7 +6,7 @@ import requests
 
 from chat_pipeline import llm, messages, prompts, service
 from chat_pipeline.generation import ExtractiveGenerator, LLMGenerator, get_generator
-from chat_pipeline.llm import openai_compatibleClient, FakeLLMClient, LLMUnavailable, OpenAICompatibleClient
+from chat_pipeline.llm import FakeLLMClient, LLMUnavailable, OpenAICompatibleClient, openai_compatibleClient
 
 from .chat_helpers import fake_search, hit
 

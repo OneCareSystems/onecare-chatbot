@@ -11,7 +11,9 @@ from .llm import get_llm_client
 
 class ExtractiveGenerator:
     system_prompt = None
-    info = {"model": "extractive", "prompt_version": ""}
+
+    def __init__(self):
+        self.info = {"model": "extractive", "prompt_version": ""}
 
     def generate(self, query, hits, language):
         return hits[0]["text"]

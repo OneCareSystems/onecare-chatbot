@@ -96,7 +96,7 @@ def _run(query, trace):
         info = getattr(generator, "info", {}) or {}
         trace.model, trace.prompt_version = info.get("model", ""), info.get("prompt_version", "")
         raw = generator.generate(query, usable, language)
-    except Exception as exc:
+    except Exception as exc:  # noqa: BLE001 - generator failures require a safe fallback without logging patient text.
         logger.error("Answer generation failed (%s)", exc.__class__.__name__)
         return _fallback(language, "GENERATION_UNAVAILABLE", key="unavailable")
 
