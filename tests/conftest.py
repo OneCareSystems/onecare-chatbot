@@ -35,6 +35,13 @@ def chat_env(settings):
     settings.CHAT_GENERATOR_CLASS = "chat_pipeline.generation.ExtractiveGenerator"
     settings.SPRING_BASE_URL, settings.SPRING_SERVICE_TOKEN = "http://spring.test", "spring-service-token"
     settings.SPRING_CONNECT_TIMEOUT, settings.SPRING_READ_TIMEOUT = 1, 1
+    settings.CHAT_LOG_ENABLED = False                                                # CHAT-10 tests switch it on themselves
+    settings.CHAT_LANGUAGE_CHECK = True
+    settings.CHAT_CONTEXT_CHUNKS, settings.CHAT_CONTEXT_CHARS_PER_CHUNK = 4, 1200
+    settings.CHAT_LANG_TA_MIN_SHARE, settings.CHAT_LANG_EN_MAX_SHARE = 0.30, 0.20
+    settings.LLM_PROVIDER, settings.LLM_API_KEY, settings.LLM_MODEL, settings.LLM_BASE_URL = "openai_compatible", "test-key-123", "test-model", ""
+    settings.LLM_MAX_TOKENS, settings.LLM_TEMPERATURE, settings.LLM_MAX_RETRIES = 400, 0.0, 1
+    settings.LLM_CONNECT_TIMEOUT, settings.LLM_TIMEOUT_SECONDS, settings.LLM_RETRY_BACKOFF_SECONDS = 1, 1, 0
     patterns.reset_cache()
     search.reset_latencies()
     yield
