@@ -146,3 +146,30 @@ SPRING_CONNECT_TIMEOUT = float(os.environ.get("SPRING_CONNECT_TIMEOUT", "2"))
 SPRING_READ_TIMEOUT = float(os.environ.get("SPRING_READ_TIMEOUT", "3"))
 SPRING_CLINIC_HOURS_PATH = os.environ.get("SPRING_CLINIC_HOURS_PATH", "/api/internal/clinic/hours")
 SPRING_CLINIC_AVAILABILITY_PATH = os.environ.get("SPRING_CLINIC_AVAILABILITY_PATH", "/api/internal/clinic/availability")
+
+# ---- DDP-#38 Stage 4: LLM integration (CHAT-08, CHAT-09, CHAT-10) ----
+# CHAT-09: which model answers. LLM_PROVIDER = openai_compatible | openai_compatible | fake
+LLM_PROVIDER = os.environ.get("LLM_PROVIDER", "openai_compatible")
+LLM_API_KEY = os.environ.get("LLM_API_KEY", "")                 # secret: .env only, never in git, never logged
+LLM_MODEL = os.environ.get("LLM_MODEL", "")                     # e.g. an openai_compatible model id from your console
+LLM_BASE_URL = os.environ.get("LLM_BASE_URL", "")               # empty = the provider's default URL
+LLM_MAX_TOKENS = int(os.environ.get("LLM_MAX_TOKENS", 400))
+_temperature = os.environ.get("LLM_TEMPERATURE", "0")
+LLM_TEMPERATURE = float(_temperature) if _temperature != "" else None      # empty = do not send the parameter
+LLM_CONNECT_TIMEOUT = float(os.environ.get("LLM_CONNECT_TIMEOUT", 3))
+LLM_TIMEOUT_SECONDS = float(os.environ.get("LLM_TIMEOUT_SECONDS", 20))
+LLM_MAX_RETRIES = int(os.environ.get("LLM_MAX_RETRIES", 1))
+CHAT_GENERATOR_CLASS = os.environ.get("CHAT_GENERATOR_CLASS", "chat_pipeline.generation.LLMGenerator")   # replaces the Stage 3 default
+
+# CHAT-08: how much context the model sees, and the same-language check
+CHAT_CONTEXT_CHUNKS = int(os.environ.get("CHAT_CONTEXT_CHUNKS", 4))
+CHAT_CONTEXT_CHARS_PER_CHUNK = int(os.environ.get("CHAT_CONTEXT_CHARS_PER_CHUNK", 1200))
+CHAT_LANGUAGE_CHECK = os.environ.get("CHAT_LANGUAGE_CHECK", "true").lower() == "true"
+CHAT_LANG_TA_MIN_SHARE = float(os.environ.get("CHAT_LANG_TA_MIN_SHARE", 0.30))
+CHAT_LANG_EN_MAX_SHARE = float(os.environ.get("CHAT_LANG_EN_MAX_SHARE", 0.20))
+
+# CHAT-10: audit log of every query and response
+CHAT_LOG_ENABLED = os.environ.get("CHAT_LOG_ENABLED", "true").lower() == "true"
+CHAT_LOG_REDACT = os.environ.get("CHAT_LOG_REDACT", "true").lower() == "true"
+CHAT_LOG_MAX_CHARS = int(os.environ.get("CHAT_LOG_MAX_CHARS", 4000))
+CHAT_LOG_RETENTION_DAYS = int(os.environ.get("CHAT_LOG_RETENTION_DAYS", 90))
