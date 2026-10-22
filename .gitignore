@@ -221,6 +221,12 @@ __marimo__/
 
 storage/
 sample.pdf
+<<<<<<< HEAD
 postman/
 NNP-English-book.pdf
 10-Tips-Healthy-Lifestyle.pdf
+=======
+10-Tips-Healthy-Lifestyle.pdf
+NNP-English-book.pdf
+postman/
+>>>>>>> 694c0957b1155f290deacc126da27e943a37a82d

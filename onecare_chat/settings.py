@@ -124,6 +124,9 @@ KB_CHUNK_OVERLAP_TOKENS = int(os.environ.get("KB_CHUNK_OVERLAP_TOKENS", "50"))
 KB_EMBED_BATCH = int(os.environ.get("KB_EMBED_BATCH", "32"))
 KB_EMBEDDER_CLASS = os.environ.get("KB_EMBEDDER_CLASS", "knowledgebase.embedding.SentenceTransformerEmbedder")
 EMBEDDING_MODEL = os.environ.get("EMBEDDING_MODEL", "intfloat/multilingual-e5-small")
+KB_EMBEDDING_LOCAL_FILES_ONLY = os.environ.get('KB_EMBEDDING_LOCAL_FILES_ONLY', 'false').lower() == 'true'
+KB_PRELOAD_EMBEDDER = os.environ.get('KB_PRELOAD_EMBEDDER', 'false').lower() == 'true'
+CHAT_FIXED_CLINIC_ENABLED = os.environ.get("CHAT_FIXED_CLINIC_ENABLED", "true").lower() == "true"
 
 # ---- Chat pipeline, DDP-#37 Stage 3 (CHAT-01 .. CHAT-07) ----
 CHAT_MAX_QUERY_CHARS = int(os.environ.get("CHAT_MAX_QUERY_CHARS", "500"))               # NFRS-007: confirm the real limit
@@ -159,6 +162,7 @@ LLM_TEMPERATURE = float(_temperature) if _temperature != "" else None      # emp
 LLM_CONNECT_TIMEOUT = float(os.environ.get("LLM_CONNECT_TIMEOUT", "3"))
 LLM_TIMEOUT_SECONDS = float(os.environ.get("LLM_TIMEOUT_SECONDS", "20"))
 LLM_MAX_RETRIES = int(os.environ.get("LLM_MAX_RETRIES", "1"))
+LLM_REASONING_EFFORT = os.environ.get('LLM_REASONING_EFFORT', '')
 CHAT_GENERATOR_CLASS = os.environ.get("CHAT_GENERATOR_CLASS", "chat_pipeline.generation.LLMGenerator")   # replaces the Stage 3 default
 
 # CHAT-08: how much context the model sees, and the same-language check

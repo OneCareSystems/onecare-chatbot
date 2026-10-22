@@ -11,6 +11,10 @@ import os
 
 from django.core.asgi import get_asgi_application
 
+from knowledgebase.embedding import preload_embedder
+
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'onecare_chat.settings')
 
 application = get_asgi_application()
+
+preload_embedder()

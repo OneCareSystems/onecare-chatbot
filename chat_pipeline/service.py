@@ -6,9 +6,11 @@ import time
 import uuid
 from dataclasses import dataclass, field
 
+from django.conf import settings
+
 from knowledgebase.language import detect_query_language
 
-from . import chat_log, clinic, confidence, guardrail, post_filter, prompts, search
+from . import chat_log, clinic, confidence, fixed_answers, guardrail, post_filter, prompts, search
 from .errors import ClinicUnavailable, VectorStoreUnavailable
 from .generation import get_generator
 from .messages import get_message
@@ -64,8 +66,12 @@ def _run(query, trace):
         trace.guardrail_category = decision.category
         return _response(REFUSAL, language, get_message("refusal", language))
 
+    fixed = fixed_answers.answer(query, language)
+    if fixed:
+        return _response(CLINIC_FACT, language, **fixed)
+
     try:                                                                               # 3 CHAT-07
-        intent = clinic.detect_clinic_intent(query)
+        intent = None if fixed_answers.mentions_other_clinic(query) else clinic.detect_clinic_intent(query)
     except Exception:
         logger.exception("Clinic intent detection failed; continuing with the knowledge base")
         intent = None
@@ -90,6 +96,7 @@ def _run(query, trace):
     if not confidence.is_confident(hits, language):                                    # 5 CHAT-05
         return _fallback(language, "NO_CONFIDENT_MATCH")
     usable = [h for h in hits if round(h["score"], 4) >= round(threshold, 4)]          # only confident chunks reach the LLM
+    usable = usable[:max(1, getattr(settings, 'CHAT_CONTEXT_CHUNKS', 4))]             # citations match supplied context
 
     try:                                                                               # 6 CHAT-08 prompt + CHAT-09 call
         generator = get_generator()

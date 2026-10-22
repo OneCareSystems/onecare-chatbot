@@ -23,6 +23,12 @@ DOCTORS_JSON = {"success": True, "data": {"doctors": [
     {"name": "Dr Silva", "availableSlots": 0}]}}
 
 
+@pytest.fixture(autouse=True)
+def live_clinic_mode(settings):
+    """This suite verifies the retained live integration, independently of configured FAQ mode."""
+    settings.CHAT_FIXED_CLINIC_ENABLED = False
+
+
 def _response(status=200, body=None):
     r = mock.Mock()
     r.status_code = status

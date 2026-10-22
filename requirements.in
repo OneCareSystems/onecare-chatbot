@@ -11,7 +11,9 @@ pdfplumber==0.11.10
 sentence-transformers==5.6.0
 transformers==5.16.1
 torch==2.14.1+cpu
-certifi==2026.7.22
+certifi==2026.10.19
+# Security pin: Pillow 13 fixes the vulnerabilities affecting 12.3.0.
+pillow==13.0.0
 idna==3.20
 
 numpy==2.4.6

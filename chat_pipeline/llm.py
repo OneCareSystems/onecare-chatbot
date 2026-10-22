@@ -108,6 +108,9 @@ class OpenAICompatibleClient(_HttpClient):
     def complete(self, system, user):
         body = {"model": self.model, "max_tokens": self.max_tokens,
                 "messages": [{"role": "system", "content": system}, {"role": "user", "content": user}]}
+        effort = getattr(settings, 'LLM_REASONING_EFFORT', '')
+        if effort:
+            body['reasoning_effort'] = effort
         if self.temperature is not None:
             body["temperature"] = self.temperature
         data = self._post(f"{self.base_url}/chat/completions",
