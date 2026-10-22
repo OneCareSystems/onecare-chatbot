@@ -9,7 +9,8 @@ class SentenceTransformerEmbedder:
 
     def __init__(self):
         from sentence_transformers import SentenceTransformer
-        self.model = SentenceTransformer(settings.EMBEDDING_MODEL)
+        self.model = SentenceTransformer(settings.EMBEDDING_MODEL,
+                                         local_files_only=getattr(settings, 'KB_EMBEDDING_LOCAL_FILES_ONLY', False))
 
     def count_tokens(self, text):
         return len(self.model.tokenizer.encode(text, add_special_tokens=False))
@@ -32,3 +33,9 @@ def get_embedder():
 
 def reset_embedder():
     _cache.clear()
+
+
+def preload_embedder():
+    """Optionally load/warm the existing model before serving requests, outside search's deadline."""
+    if getattr(settings, 'KB_PRELOAD_EMBEDDER', False):
+        get_embedder().embed_query('clinic information')

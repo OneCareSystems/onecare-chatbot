@@ -1,0 +1,46 @@
+{
+  "en": [
+    {
+      "id": "hours",
+      "label": "Clinic hours",
+      "query": "What are the clinic hours?"
+    },
+    {
+      "id": "doctors",
+      "label": "Doctors available today",
+      "query": "Is a doctor available today?"
+    },
+    {
+      "id": "booking",
+      "label": "How to book an appointment",
+      "query": "How do I book an appointment?"
+    },
+    {
+      "id": "services",
+      "label": "Services offered",
+      "query": "What services does the clinic offer?"
+    }
+  ],
+  "ta": [
+    {
+      "id": "hours",
+      "label": "கிளினிக் நேரம்",
+      "query": "கிளினிக் நேரம் என்ன?"
+    },
+    {
+      "id": "doctors",
+      "label": "இன்று மருத்துவர்",
+      "query": "இன்று மருத்துவர் இருக்கிறாரா?"
+    },
+    {
+      "id": "booking",
+      "label": "முன்பதிவு செய்வது எப்படி",
+      "query": "அப்பாயிண்ட்மென்ட் எப்படி பதிவு செய்வது?"
+    },
+    {
+      "id": "services",
+      "label": "கிளினிக் சேவைகள்",
+      "query": "கிளினிக்கில் என்னென்ன சேவைகள் உள்ளன?"
+    }
+  ]
+}

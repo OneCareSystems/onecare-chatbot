@@ -101,10 +101,22 @@ def test_the_best_score_is_logged_for_a_low_confidence_fallback():
     assert last().best_score == 0.55 and last().matched_chunks[0]["used"] is False
 
 
-def test_clinic_facts_are_logged_and_a_spring_failure_is_a_fallback_path():
+def test_clinic_facts_are_logged_and_a_spring_failure_is_a_fallback_path(settings):
+    settings.CHAT_FIXED_CLINIC_ENABLED = False
     with mock.patch("chat_pipeline.clinic.requests.get", side_effect=Exception("down")):
         service.process_query("clinic hours?")
     assert (last().response_type, last().fallback_path) == ("FALLBACK", "CLINIC_DATA_UNAVAILABLE")
+
+
+def test_configured_clinic_facts_are_logged_without_a_live_spring_lookup(settings):
+    settings.CHAT_FIXED_CLINIC_ENABLED = True
+    with mock.patch("chat_pipeline.clinic.requests.get") as spring:
+        response = service.process_query("clinic hours?")
+    spring.assert_not_called()
+    row = last()
+    assert (row.response_type, row.fallback_path) == ("CLINIC_FACT", None)
+    assert row.request_id == response["requestId"]
+    assert row.response_text == "OneCare clinic is open from 5:00 PM to 11:00 PM."
 
 
 def test_phone_email_and_id_numbers_are_redacted_before_storage():
