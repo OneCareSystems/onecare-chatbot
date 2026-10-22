@@ -39,9 +39,20 @@ def _actor(request):
 
 @csrf_exempt
 @require_service_token
-@require_http_methods(["POST"])
+@require_http_methods(["POST", "GET"])
 @json_errors
 def upload(request):
+    if request.method == 'GET':
+        _actor(request)
+        try:
+            page = int(request.GET.get('page', '1'))
+            page_size = int(request.GET.get('pageSize', '20'))
+        except ValueError:
+            raise ValidationFailed('page and pageSize must be integers.') from None
+        docs, count = services.list_documents(page=page, page_size=page_size,
+                                             source_type=request.GET.get('sourceType'), status=request.GET.get('status'))
+        return JsonResponse({'items': [document_to_dict(doc) for doc in docs], 'count': count,
+                             'page': page, 'pageSize': page_size, 'totalPages': (count + page_size - 1) // page_size})
     doc = services.upload_pdf(uploaded_file=request.FILES.get("file"),
                               title=request.POST.get("title", ""), actor=_actor(request))
     return JsonResponse(document_to_dict(doc), status=201)
