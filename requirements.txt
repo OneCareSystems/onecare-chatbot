@@ -14,7 +14,7 @@ asgiref==3.12.1
     # via django
 babel==2.18.0
     # via courlan
-certifi==2026.7.22
+certifi==2026.10.19
     # via
     #   -r requirements.in
     #   httpcore
@@ -125,8 +125,10 @@ pdfminer-six==20260107
     # via pdfplumber
 pdfplumber==0.11.10
     # via -r requirements.in
-pillow==12.3.0
-    # via pdfplumber
+pillow==13.0.0
+    # via
+    #   -r requirements.in
+    #   pdfplumber
 pycparser==3.11
     # via cffi
 pygments==2.21.0
