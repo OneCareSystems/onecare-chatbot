@@ -1,7 +1,6 @@
 from unittest import mock
 
-from chat_pipeline.llm import OpenAICompatibleClient
-from chat_pipeline.llm import GroqClient, get_llm_client
+from chat_pipeline.llm import GroqClient, OpenAICompatibleClient, get_llm_client
 
 
 def test_groq_provider_uses_compatible_endpoint_and_dedicated_key(settings):

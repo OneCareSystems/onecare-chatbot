@@ -2,7 +2,6 @@ from unittest import mock
 
 from chat_pipeline import search
 
-
 QUERY = '\u0ba8\u0bc0\u0bb0\u0bbf\u0bb4\u0bbf\u0bb5\u0bc1 \u0b89\u0ba3\u0bb5\u0bc1'
 
 
