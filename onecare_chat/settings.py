@@ -20,9 +20,15 @@ SECRET_KEY = 'django-insecure-o)t5@48u&$f1v^9@_ihi!5+k@6sv3x1(pbq+r5dwve69eidt7t
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
-
+ALLOWED_HOSTS = [
+    host.strip()
+    for host in os.environ.get(
+        "DJANGO_ALLOWED_HOSTS",
+        "localhost,127.0.0.1,chatbot,backend"
+    ).split(",")
+ if host.strip()   
+]
+    
 # Application definition
 
 INSTALLED_APPS = [
