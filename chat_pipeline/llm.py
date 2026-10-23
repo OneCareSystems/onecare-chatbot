@@ -135,13 +135,24 @@ class FakeLLMClient:
         return re.split(r"(?<=[.!?])\s", match.group(1).strip())[0]
 
 
+class GroqClient(OpenAICompatibleClient):
+    """Groq uses the OpenAI-compatible chat completions protocol."""
+
+    default_base_url = "https://api.groq.com/openai/v1"
+
+    def __init__(self):
+        super().__init__()
+        self.api_key = getattr(settings, "GROQ_API_KEY", "") or self.api_key
+
+
 def get_llm_client():
     provider = (
         getattr(settings, "LLM_PROVIDER", "openai_compatible") or ""
-    ).lower()
+    ).strip().lower()
 
     clients = {
         "openai_compatible": OpenAICompatibleClient,
+        "groq": GroqClient,
         "fake": FakeLLMClient,
     }
 

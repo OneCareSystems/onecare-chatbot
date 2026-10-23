@@ -134,6 +134,7 @@ CHAT_TAMIL_SHARE_THRESHOLD = float(os.environ.get("CHAT_TAMIL_SHARE_THRESHOLD", 
 CHAT_SEARCH_K = int(os.environ.get("CHAT_SEARCH_K", "5"))
 CHAT_SEARCH_MAX_K = int(os.environ.get("CHAT_SEARCH_MAX_K", "10"))
 CHAT_SEARCH_TIMEOUT_SECONDS = float(os.environ.get("CHAT_SEARCH_TIMEOUT_SECONDS", "5"))
+CHAT_TRANSLATE_TAMIL_SEARCH = os.environ.get('CHAT_TRANSLATE_TAMIL_SEARCH', 'false').lower() == 'true'
 # CHAT-05: best score >= threshold counts as a match (inclusive). CALIBRATE on EN and TA fixture sets before release.
 CHAT_SCORE_THRESHOLDS = {
     "EN": float(os.environ.get("CHAT_SCORE_THRESHOLD_EN", "0.80")),
@@ -154,6 +155,7 @@ SPRING_CLINIC_AVAILABILITY_PATH = os.environ.get("SPRING_CLINIC_AVAILABILITY_PAT
 # CHAT-09: which model answers. LLM_PROVIDER = openai_compatible | openai_compatible | fake
 LLM_PROVIDER = os.environ.get("LLM_PROVIDER", "openai_compatible")
 LLM_API_KEY = os.environ.get("LLM_API_KEY", "")                 # secret: .env only, never in git, never logged
+GROQ_API_KEY = os.environ.get("GROQ_API_KEY", "")
 LLM_MODEL = os.environ.get("LLM_MODEL", "")                     # e.g. an openai_compatible model id from your console
 LLM_BASE_URL = os.environ.get("LLM_BASE_URL", "")               # empty = the provider's default URL
 LLM_MAX_TOKENS = int(os.environ.get("LLM_MAX_TOKENS", "400"))
