@@ -16,7 +16,9 @@ ANSWERS = {
     },
     'doctors': {
         'EN': 'Yes, the doctor is available today from {opening} to {closing}.',
-        'TA': 'ஆம், இன்று மருத்துவர் மாலை 5:00 மணி முதல் இரவு 11:00 மணி வரை கிடைப்பார்.',
+
+        'TA': 'ஆம், இன்று மருத்துவர் மாலை 5:00 மணி முதல் இரவு 11:00 மணி வரை இருப்பார்',
+
     },
     'booking': {
         'EN': 'You can book an appointment through the OneCare patient portal. Click the button below to go to the appointment booking page.',

@@ -22,6 +22,21 @@ class VectorRebuildResult:
     documents_seen: int
 
 
+def list_documents(*, page=1, page_size=20, source_type=None, status=None):
+    if page < 1 or not 1 <= page_size <= 100:
+        raise ValidationFailed('page must be positive and pageSize must be between 1 and 100.')
+    if source_type and source_type not in Doc.SourceType.values:
+        raise ValidationFailed('sourceType must be PDF or WEB.')
+    if status and status not in Doc.Status.values:
+        raise ValidationFailed('Unknown ingestion status.')
+    query = Doc.objects.order_by('-created_at', '-id')
+    if source_type:
+        query = query.filter(source_type=source_type)
+    query = query.filter(status=status) if status else query.exclude(status=Doc.Status.REMOVED)
+    count = query.count()
+    return query[(page - 1) * page_size:page * page_size], count
+
+
 def rebuild_vector_index(repository, rebuilder):
     document_ids = [document.pk for document in repository.list_indexable()]
     rebuilder.rebuild(document_ids)
