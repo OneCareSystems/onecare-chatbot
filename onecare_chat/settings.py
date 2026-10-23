@@ -151,10 +151,12 @@ SPRING_CLINIC_HOURS_PATH = os.environ.get("SPRING_CLINIC_HOURS_PATH", "/api/inte
 SPRING_CLINIC_AVAILABILITY_PATH = os.environ.get("SPRING_CLINIC_AVAILABILITY_PATH", "/api/internal/clinic/availability")
 
 # ---- DDP-#38 Stage 4: LLM integration (CHAT-08, CHAT-09, CHAT-10) ----
-# CHAT-09: which model answers. LLM_PROVIDER = openai_compatible | openai_compatible | fake
+# CHAT-09: which model answers. LLM_PROVIDER = groq | openai_compatible | fake
 LLM_PROVIDER = os.environ.get("LLM_PROVIDER", "openai_compatible")
 LLM_API_KEY = os.environ.get("LLM_API_KEY", "")                 # secret: .env only, never in git, never logged
-LLM_MODEL = os.environ.get("LLM_MODEL", "")                     # e.g. an openai_compatible model id from your console
+if LLM_PROVIDER.lower() == "groq":
+    LLM_API_KEY = os.environ.get("GROQ_API_KEY", "") or LLM_API_KEY
+LLM_MODEL = os.environ.get("LLM_MODEL", "")                     # model ID from your provider's console
 LLM_BASE_URL = os.environ.get("LLM_BASE_URL", "")               # empty = the provider's default URL
 LLM_MAX_TOKENS = int(os.environ.get("LLM_MAX_TOKENS", "400"))
 _temperature = os.environ.get("LLM_TEMPERATURE", "0")

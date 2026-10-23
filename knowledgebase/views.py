@@ -2,13 +2,14 @@ import json
 import logging
 from functools import wraps
 
-from django.http import HttpResponse, JsonResponse
+from django.core.paginator import Paginator
+from django.http import FileResponse, HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 
 from onecare_chat.service_auth import require_service_token
 
-from . import services
+from . import services, storage
 from .errors import NotFound, ServiceError, ValidationFailed
 from .models import KnowledgeDocument
 from .serializers import document_to_dict
@@ -39,12 +40,48 @@ def _actor(request):
 
 @csrf_exempt
 @require_service_token
-@require_http_methods(["POST"])
+@require_http_methods(["GET", "POST"])
 @json_errors
 def upload(request):
+    if request.method == "GET":
+        _actor(request)
+        try:
+            page = int(request.GET.get("page", "1"))
+            page_size = int(request.GET.get("pageSize", "20"))
+        except ValueError:
+            raise ValidationFailed("Invalid pagination.") from None
+        if page < 1 or not 1 <= page_size <= 100:
+            raise ValidationFailed("Invalid pagination.")
+        documents = KnowledgeDocument.objects.order_by("-created_at", "-id")
+        status = request.GET.get("status")
+        documents = documents.filter(status=status) if status else documents.exclude(status="REMOVED")
+        if request.GET.get("sourceType"):
+            documents = documents.filter(source_type=request.GET["sourceType"])
+        paginator = Paginator(documents, page_size)
+        return JsonResponse({"items": [document_to_dict(doc) for doc in documents[(page - 1) * page_size:page * page_size]],
+                             "count": paginator.count, "totalPages": paginator.num_pages, "page": page, "pageSize": page_size})
     doc = services.upload_pdf(uploaded_file=request.FILES.get("file"),
                               title=request.POST.get("title", ""), actor=_actor(request))
     return JsonResponse(document_to_dict(doc), status=201)
+
+
+@require_service_token
+@require_http_methods(["GET"])
+@json_errors
+def document_file(request, doc_id):
+    _actor(request)
+    doc = KnowledgeDocument.objects.filter(pk=doc_id, source_type="PDF").exclude(status="REMOVED").first()
+    if doc is None or not doc.storage_path:
+        raise NotFound("PDF not found.")
+    try:
+        handle = storage.resolve(doc.storage_path).open("rb")
+    except (FileNotFoundError, ValueError, IsADirectoryError):
+        raise NotFound("PDF file is no longer available.") from None
+    response = FileResponse(handle, content_type="application/pdf", filename=doc.original_filename or "document.pdf",
+                            as_attachment=request.GET.get("download") == "1")
+    response["Cache-Control"] = "private, no-store"
+    response["X-Content-Type-Options"] = "nosniff"
+    return response
 
 
 @csrf_exempt

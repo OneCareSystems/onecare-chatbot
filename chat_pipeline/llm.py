@@ -1,4 +1,4 @@
-"""CHAT-09: the LLM call. Plain HTTP (requests), no vendor SDK. Providers: openai_compatible | openai_compatible | fake.
+"""CHAT-09: the LLM call. Plain HTTP (requests), no vendor SDK. Providers: groq | openai_compatible | fake.
 One short retry only for transient errors. The API key and the prompt text are NEVER logged."""
 import logging
 import re
@@ -105,7 +105,7 @@ class OpenAICompatibleClient(_HttpClient):
     """OpenAI, Azure-style gateways, Ollama (http://localhost:11434/v1), vLLM, LM Studio ... any /chat/completions API."""
     default_base_url = "https://api.openai.com/v1"
 
-    def complete(self, system, user):
+    def _request_body(self, system, user):
         body = {"model": self.model, "max_tokens": self.max_tokens,
                 "messages": [{"role": "system", "content": system}, {"role": "user", "content": user}]}
         effort = getattr(settings, 'LLM_REASONING_EFFORT', '')
@@ -113,12 +113,29 @@ class OpenAICompatibleClient(_HttpClient):
             body['reasoning_effort'] = effort
         if self.temperature is not None:
             body["temperature"] = self.temperature
+        return body
+
+    def complete(self, system, user):
+        body = self._request_body(system, user)
         data = self._post(f"{self.base_url}/chat/completions",
                           {"Authorization": f"Bearer {self.api_key}", "Content-Type": "application/json"}, body)
         try:
             return (data["choices"][0]["message"]["content"] or "").strip()
         except (KeyError, IndexError, TypeError) as exc:
             raise LLMUnavailable("The LLM response has no content.") from exc
+
+
+class GroqClient(OpenAICompatibleClient):
+    """Groq's chat completions API, using the existing timeout and retry handling."""
+
+    default_base_url = "https://api.groq.com/openai/v1"
+
+    def _request_body(self, system, user):
+        body = super()._request_body(system, user)
+        body["max_completion_tokens"] = body.pop("max_tokens")
+        if self.model.startswith("openai/gpt-oss-"):
+            body["include_reasoning"] = False
+        return body
 
 
 class FakeLLMClient:
@@ -141,6 +158,7 @@ def get_llm_client():
     ).lower()
 
     clients = {
+        "groq": GroqClient,
         "openai_compatible": OpenAICompatibleClient,
         "fake": FakeLLMClient,
     }
