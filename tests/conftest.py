@@ -31,6 +31,7 @@ def chat_env(settings):
     settings.CHAT_SCORE_THRESHOLDS = {"EN": 0.80, "TA": 0.75, "DEFAULT": 0.80}
     settings.CHAT_SEARCH_K, settings.CHAT_SEARCH_MAX_K, settings.CHAT_SEARCH_TIMEOUT_SECONDS = 5, 10, 1
     settings.CHAT_MAX_QUERY_CHARS = 500
+    settings.CHAT_TRANSLATE_TAMIL_SEARCH = False
     settings.CHAT_TAMIL_SHARE_THRESHOLD = 0.5
     settings.CHAT_GENERATOR_CLASS = "chat_pipeline.generation.ExtractiveGenerator"
     settings.SPRING_BASE_URL, settings.SPRING_SERVICE_TOKEN = "http://spring.test", "spring-service-token"
