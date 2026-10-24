@@ -47,7 +47,7 @@ djangorestframework==3.18.3
     # via -r requirements.in
 faiss-cpu==1.15.1
     # via -r requirements.in
-filelock==4.0.12
+filelock==4.2.1
     # via
     #   huggingface-hub
     #   torch
