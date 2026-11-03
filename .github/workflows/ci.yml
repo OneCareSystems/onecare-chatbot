@@ -8,7 +8,8 @@ on:
 
 jobs:
   checks:
-    runs-on: ubuntu-latest
+    # runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     env:
       DB_NAME: onecare_chatbot
       DB_USER: chatbot_app
