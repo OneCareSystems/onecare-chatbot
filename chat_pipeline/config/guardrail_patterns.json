@@ -1,0 +1,184 @@
+{
+  "_meta": {
+    "version": 1,
+    "review": "THE DOCTOR MUST REVIEW THIS FILE. It is shared by CHAT-02 (questions), CHAT-06 (answers) and CHAT-07 (clinic facts). All three pattern sets (en, ta, romanised) are ALWAYS run, whatever language CHAT-01 detected. Patterns are case-insensitive regular expressions. A keyword list misses paraphrases: CHAT-06 is the second line of defence.",
+    "tamil_review": "Tamil and romanised-Tamil patterns must be reviewed by a Tamil speaker."
+  },
+  "pre_generation": {
+    "dosage": {
+      "en": [
+        "\\b(what|which|how much|how many)\\b[^.?!]{0,40}\\b(dose|doses|dosage|mg|milligrams?|tablets?|pills?|capsules?|drops?|teaspoons?)\\b[^.?!]{0,40}\\b(should|can|could|do|to|may) (i|we)\\b",
+        "\\bhow (much|many)\\b[^.?!]{0,40}\\b(should|can|could|do|may) (i|we)\\b[^.?!]{0,20}\\b(take|have|give|use)\\b",
+        "\\b(dose|doses|dosage)\\b[^.?!]{0,30}\\b(for|of)\\b[^.?!]{0,30}\\b(me|my|myself|child|children|kid|baby|son|daughter|mother|father|wife|husband|adults?)\\b",
+        "\\b(what('s| is| are)|tell me|give me)\\b[^.?!]{0,20}\\b(dose|doses|dosage)\\b",
+        "\\b(recommended|correct|right|safe|maximum|max|normal|usual|proper) (daily )?(dose|dosage|amount)\\b",
+        "\\bhow often\\b[^.?!]{0,20}\\b(take|use|give)\\b",
+        "\\b(overdose|double dose|extra dose)\\b",
+        "\\bcan i (take|have|use) (\\d+|two|three|more|double|extra)\\b"
+      ],
+      "ta": [
+        "டோஸ்",
+        "மருந்தளவு",
+        "மருந்து\\s*அளவு",
+        "(எத்தனை|எவ்வளவு)[^.?!]{0,40}(மாத்திரை|மில்லி|மி\\.?\\s?கி)",
+        "(மாத்திரை|மில்லி)[^.?!]{0,40}(எத்தனை|எவ்வளவு)",
+        "அளவு[^.?!]{0,30}(எடுத்துக்\\s*கொள்ள|சாப்பிட)",
+        "(எடுத்துக்\\s*கொள்ள|சாப்பிட)[^.?!]{0,30}அளவு"
+      ],
+      "romanised": [
+        "\\b(evlo|evalo|evvalavu|evlavu|ethana|ethanai|yethana|yethanai)\\b[^.?!]{0,30}\\b(tablet|tablets|mathirai|maathirai|dose|mg|ml)\\b",
+        "\\b(tablet|tablets|mathirai|maathirai|dose|mg)\\b[^.?!]{0,30}\\b(evlo|evalo|evvalavu|evlavu|ethana|ethanai|yethana|yethanai)\\b",
+        "\\bdose\\b[^.?!]{0,20}\\b(enna|yenna)\\b",
+        "\\b(enna|yenna) dose\\b"
+      ]
+    },
+    "diagnosis": {
+      "en": [
+        "\\b(do|could|might|may|can) i have\\b",
+        "\\bam i (having|suffering|sick|ill)\\b",
+        "\\bhave i got\\b",
+        "\\bwhat (disease|illness|condition|infection|sickness|disorder) (do i have|is it|am i)\\b",
+        "\\bwhat('s| is) (wrong|the matter) with (me|my)\\b",
+        "\\bdiagnose (me|my)\\b",
+        "\\b(diagnose|diagnosis)\\b[^.?!]{0,20}\\b(me|my|myself)\\b",
+        "\\bwhat is causing my\\b",
+        "\\b(is|could|might|may) (this|it|that) (be )?(cancer|diabetes|dengue|covid|an infection|serious|a heart attack|a stroke)\\b",
+        "\\bmy (symptoms?|fever|cough|rash|pain|headache|stomach ?ache|chest pain)\\b[^.?!]{0,60}\\b(mean|means|indicate|indicates|sign of|could be|might be|due to|caused by)\\b",
+        "\\bwhat (do|does) (my |these )?symptoms? mean\\b"
+      ],
+      "ta": [
+        "எனக்கு[^.?!]{0,40}(இருக்கிறதா|இருக்குமா|உள்ளதா|வந்துள்ளதா|இருக்கலாமா)",
+        "என்ன\\s*(நோய்|பிரச்சினை|பிரச்சனை)",
+        "நோய்\\s*(கண்டறி|கண்டுபிடி)",
+        "நோயை\\s*(கண்டறி|கண்டுபிடி)"
+      ],
+      "romanised": [
+        "\\benakku\\b[^.?!]{0,40}\\b(irukka|irukkaa|irukkuma|irukkumaa|vanthirukka|vandhirukka)\\b",
+        "\\b(enna|yenna) (noi|disease|problem)\\b",
+        "\\b(noi|disease)\\b[^.?!]{0,10}\\b(kandupidi|kandupidikka|diagnose)\\b"
+      ]
+    },
+    "prescription": {
+      "en": [
+        "\\bprescribe\\b",
+        "\\bprescription\\b[^.?!]{0,30}\\b(me|my|for)\\b",
+        "\\b(write|give|get|need) (me )?(a )?prescription\\b",
+        "\\bwhat (medicine|medication|drug|antibiotic|tablet|pill|syrup)s? (should|can|do|could) i (take|use|buy|get|try)\\b",
+        "\\bwhich (medicine|medication|drug|antibiotic|tablet|pill|syrup) (is best|is good|should i|can i|do i)\\b",
+        "\\brecommend (me )?(a |an |some |the )?(medicine|medication|drug|antibiotic|tablet|pill|painkiller)\\b",
+        "\\bsuggest (me )?(a |an |some )?(medicine|medication|drug|antibiotic|painkiller)\\b",
+        "\\bwhat (can|should) i take for\\b"
+      ],
+      "ta": [
+        "மருந்துச்?\\s*சீட்டு",
+        "(என்ன|எந்த)\\s*(மருந்து|மாத்திரை|ஆன்டிபயாடிக்)[^.?!]{0,30}(சாப்பிட|எடுத்துக்\\s*கொள்ள|வாங்க|பயன்படுத்த)",
+        "(மருந்து|மாத்திரை)[^.?!]{0,20}(பரிந்துரை|எழுதிக்?\\s*கொடு)",
+        "பரிந்துரை[^.?!]{0,20}(மருந்து|மாத்திரை)"
+      ],
+      "romanised": [
+        "\\b(enna|yenna) (marundhu|marunthu|maruthu|medicine|tablet|mathirai)\\b[^.?!]{0,30}\\b(saapida|saapidanum|sapidanum|edukka|edukkanum|vangala|vaanga|use)\\b",
+        "\\b(marundhu|marunthu|medicine|tablet)\\b[^.?!]{0,20}\\b(sollunga|suggest|recommend)\\b"
+      ]
+    }
+  },
+  "output": {
+    "dosage": {
+      "en": [
+        "\\b(take|use|give|administer|swallow)\\b[^.?!]{0,40}\\b\\d+(\\.\\d+)?\\s?(mg|mcg|ml|tablets?|pills?|capsules?|drops?)\\b",
+        "\\b\\d+(\\.\\d+)?\\s?(mg|mcg|ml|tablets?|pills?|capsules?)\\b[^.?!]{0,30}\\b(twice|thrice|once|every|daily|per day|a day|times)\\b",
+        "\\b(recommended|safe|maximum|usual|adult) (dose|dosage)\\b",
+        "\\byou (should|can|may|must) take\\b[^.?!]{0,40}\\b(mg|tablet|pill|capsule)",
+        "\\b(once|twice|three times|\\d times) (a|per) day\\b"
+      ],
+      "ta": [
+        "(நாளுக்கு|ஒரு நாளைக்கு)\\s*(ஒரு|இரண்டு|மூன்று|\\d+)\\s*(முறை|தடவை)",
+        "(எடுத்துக்\\s*கொள்ளுங்கள்|சாப்பிடுங்கள்)[^.?!]{0,40}\\d+\\s*(மி\\.?\\s?கி|மாத்திரை|மில்லி)",
+        "\\d+\\s*மி\\.?\\s?கி"
+      ],
+      "romanised": []
+    },
+    "diagnosis": {
+      "en": [
+        "\\byou (probably |likely |may |might |could )?(have|are suffering from|are experiencing)\\b[^.?!]{0,40}\\b(infection|disease|diabetes|cancer|dengue|flu|covid|condition|disorder|syndrome|asthma|hypertension)\\b",
+        "\\bthis (is|sounds like|looks like|could be|may be|might be)\\b[^.?!]{0,30}\\b(infection|disease|diabetes|cancer|dengue|flu|condition|disorder)\\b",
+        "\\bi (diagnose|think you have|believe you have)\\b",
+        "\\byour (symptoms|condition) (suggest|indicate|mean)\\b",
+        "\\byou are (suffering|diagnosed)\\b"
+      ],
+      "ta": [
+        "உங்களுக்கு[^.?!]{0,40}(நோய்|தொற்று|நீரிழிவு|புற்றுநோய்|டெங்கு|காய்ச்சல்)[^.?!]{0,20}(இருக்கிறது|உள்ளது|இருக்கலாம்)",
+        "நீங்கள்[^.?!]{0,20}(நோயால்|தொற்றால்)\\s*பாதிக்கப்பட்ட"
+      ],
+      "romanised": []
+    }
+  },
+  "off_scope": [
+    "ignore (all |any )?(previous|prior|above) instructions",
+    "```",
+    "<\\s*script",
+    "\\b(rm -rf|sudo )",
+    "as an ai (language )?model"
+  ],
+  "prompt_leak_markers": [
+    "system prompt",
+    "my instructions are",
+    "these are my instructions",
+    "you are a clinic assistant",
+    "[system]",
+    "<<sys>>",
+    "begin system"
+  ],
+  "clinic_facts": {
+    "hours": {
+      "en": [
+        "\\b(clinic|opening|office|working|business|visiting) (hours|time|times|timings?)\\b",
+        "\\bwhat time\\b[^.?!]{0,30}\\b(open|close|opens|closes)\\b",
+        "\\bwhen (do|does|are|is)\\b[^.?!]{0,30}\\b(you|clinic|the clinic)\\b[^.?!]{0,20}\\b(open|close|opens|closes)\\b",
+        "\\b(opening|closing) (hours|time)\\b",
+        "\\bis the clinic open\\b"
+      ],
+      "ta": [
+        "கிளினிக்\\s*(நேரம்|நேரங்கள்|திறந்திருக்கும்|திறக்கும்|மூடும்)",
+        "(திறக்கும்|மூடும்)\\s*நேரம்",
+        "வேலை\\s*நேரம்",
+        "(எப்போது|எத்தனை\\s*மணிக்கு)[^.?!]{0,30}(திறக்கும்|மூடும்|திறப்பீர்கள்)"
+      ],
+      "romanised": [
+        "\\bclinic (neram|time|timing|timings)\\b",
+        "\\b(eppo|eppodhu|eppothu)\\b[^.?!]{0,20}\\b(open|thirakkum|thirakum|moodum|close)\\b",
+        "\\bvelai neram\\b"
+      ]
+    },
+    "availability": {
+      "en": [
+        "\\bdoctors? (is |are )?(available|availability|free|in|there)\\b",
+        "\\bis (dr\\.?|doctor)\\b[^.?!]{0,30}\\b(available|in|free|there)\\b",
+        "\\bavailable (slots?|appointments?|doctors?)\\b",
+        "\\b(slots?|appointments?) (are )?available\\b",
+        "\\bwho is available\\b",
+        "\\bwhich doctors?\\b[^.?!]{0,20}\\b(available|today|tomorrow)\\b",
+        "\\bdoctor availability\\b"
+      ],
+      "ta": [
+        "மருத்துவர்[^.?!]{0,30}(இருக்கிறாரா|இருப்பாரா|கிடைப்பாரா|இருக்கிறார்களா|கிடைக்கிறார்களா|கிடைப்பு|இருப்பு)",
+        "(மருத்துவர்|டாக்டர்)[^.?!]{0,30}(இன்று|நாளை)",
+        "காலி\\s*(நேரம்|நேரங்கள்)",
+        "சந்திப்பு[^.?!]{0,20}(கிடைக்குமா|உள்ளதா)"
+      ],
+      "romanised": [
+        "\\bdoctor\\b[^.?!]{0,20}\\b(irukkara|irukkaara|irukkangala|irukkaangala|irupparaa|irupaara|kidaikkuma|available)\\b",
+        "\\bdoctor (innaiku|indru|inniku|naalai|nalai)\\b"
+      ]
+    },
+    "today": [
+      "\\btoday\\b",
+      "இன்று",
+      "\\b(indru|inniku|innaiku|indhru)\\b"
+    ],
+    "tomorrow": [
+      "\\btomorrow\\b",
+      "நாளை",
+      "\\b(naalai|nalai|naale)\\b"
+    ]
+  }
+}

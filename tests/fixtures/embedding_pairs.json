@@ -1,0 +1,17 @@
+{
+  "min_cosine": 0.0,
+  "pairs": [
+    {"en": "The clinic is open from 9 AM to 5 PM, Monday to Friday.",
+     "ta": "கிளினிக் திங்கள் முதல் வெள்ளி வரை காலை 9 மணி முதல் மாலை 5 மணி வரை திறந்திருக்கும்."},
+    {"en": "You can book an appointment through the patient portal.",
+     "ta": "நோயாளர் இணையதளம் மூலம் நீங்கள் சந்திப்பை முன்பதிவு செய்யலாம்."},
+    {"en": "The chatbot cannot give medical advice or prescribe medicine.",
+     "ta": "இந்த சாட்போட் மருத்துவ ஆலோசனை வழங்கவோ மருந்து பரிந்துரைக்கவோ முடியாது."},
+    {"en": "Please bring your identity card and previous medical reports to your visit.",
+     "ta": "உங்கள் வருகைக்கு அடையாள அட்டை மற்றும் முந்தைய மருத்துவ அறிக்கைகளை கொண்டு வரவும்."},
+    {"en": "To cancel an appointment, please call the clinic at least one day in advance.",
+     "ta": "சந்திப்பை ரத்து செய்ய, குறைந்தது ஒரு நாள் முன்பே கிளினிக்கை அழைக்கவும்."},
+    {"en": "In an emergency, go to the nearest hospital immediately.",
+     "ta": "அவசர நிலையில் உடனடியாக அருகிலுள்ள மருத்துவமனைக்குச் செல்லவும்."}
+  ]
+}

@@ -1,0 +1,2 @@
+MODEL_NAME = "sentence-transformers/LaBSE"
+MODEL_REVISION = "836121a0533e5664b21c7aacc5d22951f2b8b25b"

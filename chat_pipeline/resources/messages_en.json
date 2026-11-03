@@ -1,0 +1,20 @@
+{
+  "_meta": "STATIC, DOCTOR-APPROVED TEXT. No LLM-generated content. EN wording needs doctor sign-off.",
+  "refusal": "I'm sorry, I am unable to provide medical diagnoses or prescriptions. Please consult a doctor. I can still help with approved topics, such as clinic information and general health information from our approved sources.",
+  "fallback": "I'm sorry, I don't have information about that. Please ask the clinic or your doctor directly.",
+  "unavailable": "The assistant is temporarily unavailable. Please try again shortly, or contact the clinic.",
+  "clinic_hours": "Our clinic hours are: {hours}.",
+  "closed": "closed",
+  "availability": "Doctor availability on {date}: {doctors}.",
+  "availability_none": "No doctors have available slots on {date}.",
+  "slots": "{count} slots",
+  "days": {
+    "MONDAY": "Monday",
+    "TUESDAY": "Tuesday",
+    "WEDNESDAY": "Wednesday",
+    "THURSDAY": "Thursday",
+    "FRIDAY": "Friday",
+    "SATURDAY": "Saturday",
+    "SUNDAY": "Sunday"
+  }
+}
