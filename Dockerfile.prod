@@ -1,0 +1,59 @@
+# ==============================================================================
+# Build Stage: Compile and install dependencies
+# ==============================================================================
+FROM python:3.11-slim AS builder
+
+WORKDIR /app
+
+# Install system dependencies required for compilation (e.g., mysqlclient)
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    pkg-config \
+    default-libmysqlclient-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy dependency definitions and check scripts first
+COPY requirements.txt scripts/check_installed.py ./
+
+# Install Python dependencies into a local user directory to easily copy them later
+RUN pip install --no-user --no-cache-dir \
+    --default-timeout=180 \
+    --retries=10 \
+    --prefix=/install \
+    -r requirements.txt \
+    && pip check \
+    && PYTHONPATH=/install/lib/python3.11/site-packages python check_installed.py requirements.txt
+
+# ==============================================================================
+# Production Stage: Lightweight and Secure Runtime
+# ==============================================================================
+FROM python:3.11-slim AS runtime
+
+# Ensure Python output is sent straight to terminal without buffering
+ENV PYTHONUNBUFFERED=1
+
+WORKDIR /app
+
+# Install ONLY the runtime libraries needed for MySQL (drop build-essential and headers)
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libmariadb3 \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy installed Python packages from the builder stage
+COPY --from=builder /install /usr/local
+
+# Create a non-privileged system user for running the application securely
+RUN useradd --create-home appuser \
+    && chown -R appuser:appuser /app
+
+# Switch to non-root user early
+USER appuser
+
+# Copy the rest of the application source code into the container workdir
+COPY --chown=appuser:appuser . .
+
+# Expose port 8000 for Gunicorn WSGI server
+EXPOSE 8000
+
+# Start the application using Gunicorn
+CMD ["gunicorn", "onecare_chat.wsgi:application", "--bind", "0.0.0.0:8000"]
